@@ -47,17 +47,17 @@ class Sortie
 
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Participant $organisateur = null;
+    private ?User $organisateur = null;
 
     /**
-     * @var Collection<int, Participant>
+     * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'sorties')]
-    private Collection $inscrits;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'sorties')]
+    private Collection $participants;
 
     public function __construct()
     {
-        $this->inscrits = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,12 +173,12 @@ class Sortie
         return $this;
     }
 
-    public function getOrganisateur(): ?Participant
+    public function getOrganisateur(): ?User
     {
         return $this->organisateur;
     }
 
-    public function setOrganisateur(?Participant $organisateur): static
+    public function setOrganisateur(?User $organisateur): static
     {
         $this->organisateur = $organisateur;
 
@@ -186,25 +186,25 @@ class Sortie
     }
 
     /**
-     * @return Collection<int, Participant>
+     * @return Collection<int, User>
      */
-    public function getInscrits(): Collection
+    public function getParticipants(): Collection
     {
-        return $this->inscrits;
+        return $this->participants;
     }
 
-    public function addInscrit(Participant $inscrit): static
+    public function addParticipant(User $participant): static
     {
-        if (!$this->inscrits->contains($inscrit)) {
-            $this->inscrits->add($inscrit);
+        if (!$this->participants->contains($participant)) {
+            $this->participants->add($participant);
         }
 
         return $this;
     }
 
-    public function removeInscrit(Participant $inscrit): static
+    public function removeParticipant(User $participant): static
     {
-        $this->inscrits->removeElement($inscrit);
+        $this->participants->removeElement($participant);
 
         return $this;
     }
