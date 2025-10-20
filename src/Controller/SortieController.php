@@ -9,11 +9,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/sorties', name: 'sorties_')]
 final class SortieController extends AbstractController
 {
-    #[Route('/', name: 'list')]
+    #[Route('/', name: 'list', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'SortieController',
+        return $this->render('sortie/sorties.html.twig', [
         ]);
     }
 }
