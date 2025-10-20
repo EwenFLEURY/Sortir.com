@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -20,6 +21,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'L\'email est requis.')]
+    #[Assert\Email(message: 'Veuillez saisir une email valide.')]
     private ?string $email = null;
 
     /**
@@ -35,12 +38,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom d\'utilisateur est requis.')]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom est requis.')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le prénom est requis.')]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -69,6 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->sortiesOrganisees = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->actif = true;
     }
 
     public function getId(): ?int

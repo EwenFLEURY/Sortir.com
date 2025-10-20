@@ -7,6 +7,7 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -17,21 +18,27 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom est requis.')]
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'La date et heure de début est requise.')]
     private ?\DateTimeImmutable $dateHeureDebut = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'La duree est requise.')]
     private ?int $duree = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'La date limite d\'inscription est requise.')]
     private ?\DateTimeImmutable $dateLimiteInscription = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Le nombre d\'inscription maximum est requis.')]
     private ?int $nbInscriptionMax = null;
 
     #[ORM\Column(length: 500)]
+    #[Assert\NotBlank(message: 'Les infos de sortie sont requis.')]
     private ?string $infosSortie = null;
 
     #[ORM\Column(enumType: Etat::class)]
