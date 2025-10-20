@@ -49,7 +49,6 @@ final class UserVoter extends Voter
     }
 
     private function canEdit(User $user, UserInterface $userConnected): bool {
-        error_log($user->getId() . $userConnected->getId());
         return $user === $userConnected;
     }
 
