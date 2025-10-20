@@ -1,7 +1,8 @@
 <header >
     <nav class="navbar navbar-expand-lg navbar-light bg-dark ">
         <div class="container-fluid">
-            <a class="navbar-brand text-light" href="#">Mon Site</a>
+
+            <a class="navbar-brand text-light" href="{{ path('main_index') }}">Mon Site</a>
 
             <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon bg-light"></span>
@@ -10,20 +11,33 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto text-light">
                     <li class="nav-item">
-                        <a class="nav-link text-light" aria-current="page" href="#">Villes</a>
+                        <a class="nav-link text-light" aria-current="page" href="{{ path('main_index') }}">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" aria-current="page" href="#">Sites</a>
+                        <a class="nav-link text-light" aria-current="page" href="{{ path('sorties_index') }}">Sorties</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" aria-current="page" href="#">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Mon profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Se déconnecter</a>
-                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="#">Villes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" aria-current="page" href="#">Sites</a>
+                        </li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="{{ path('users_view', {'id': app.user.id}) }}">Mon profil</a>
+                        </li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="{{ path('app_logout') }}">Se déconnecter</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="{{ path('app_login') }}">Se Connecter</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
