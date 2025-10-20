@@ -7,6 +7,72 @@
 {% endblock %}
 
 {% block body %}
+    <div name="filter" class="mt-2">
+        <div class="container">
+            <h3>Filtrer les sorties</h3>
+            <div class="row">
+                <div class="col">
+                    <label for="site-filter" class="mr-2">Filtrer par site :</label>
+                    <select id="site-filter" class="form-select" style="max-width: 340px;">
+                        <option value="">— Tous les sites —</option>
+                        {% for site in sites %}
+                            <option value="{{ site.id }}">{{ site.nom }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="nom-filter" class="mr-2">Filtrer par nom :</label>
+                    <input type="text" id="nom-filter" class="form-control" placeholder="Tapez un nom de sortie..." style="max-width: 340px;">
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label for="date-debut-filter" class="mr-2">Date de début  :</label>
+                            <input type="date" id="date-debut-filter" class="form-control" style="max-width: 200px;">
+                        </div>
+                        <div class="col">
+                            <label for="date-fin-filter" class="mr-2">Date de fin  :</label>
+                            <input type="date" id="date-fin-filter" class="form-control" style="max-width: 200px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+
+                {% if app.user %}
+                    <div class="row mt-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="organisateur-filter">
+                            <label class="form-check-label" for="organisateur-filter">
+                                Sorties dont je suis l'organisateur
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inscrit-filter">
+                            <label class="form-check-label" for="inscrit-filter">
+                                Sorties dont je suis inscrit
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="pas-inscrit-filter">
+                            <label class="form-check-label" for="pas-inscrit-filter">
+                                Sorties dont je ne suis pas inscrit
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="passee-filter">
+                            <label class="form-check-label" for="passee-filter">
+                                Sorties passées
+                            </label>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+    </div>
 
     <div name="list" class="mt-2">
         <div class="container">
@@ -25,11 +91,16 @@
                             <th>Actions</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="sorties-list">
                             {% for sortie in sorties %}
                                 {% set fin = sortie.dateHeureDebut|date_modify('+' ~ sortie.duree ~ ' minutes') %}
 
-                                <tr>
+                                <tr data-site-id="{{ sortie.site ? sortie.site.id : '' }}"
+                                    data-sortie-name="{{ sortie.nom ? sortie.nom|lower : '—' }}"
+                                    data-date="{{ sortie.dateHeureDebut|date('Y-m-d') }}"
+                                    data-organisateur="{{ app.user and app.user.nom == sortie.organisateur.nom ? 'true' : 'false' }}"
+                                    data-inscrit="{{ app.user and app.user in sortie.participants ? 'true' : 'false' }}"
+                                    data-passee="{{ (fin|date('U')) < ('now'|date('U')) ? 'true' : 'false' }}">
                                     <td>{{ sortie.nom }}</td>
                                     <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
                                     <td>{{ fin|date('d/m/Y H:i') }}</td>
@@ -97,5 +168,10 @@
 
         </div>
     </div>
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/sorties.js') }}"></script>
+    {% endblock %}
 {% endblock %}
 
