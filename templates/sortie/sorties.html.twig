@@ -1,4 +1,101 @@
 {% extends 'base.html.twig' %}
-{% block body %}
-        <h1>Hello</h1>
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('styles/sorties.css') }}">
 {% endblock %}
+
+{% block body %}
+
+    <div name="list" class="mt-2">
+        <div class="container">
+            {% if sorties %}
+                <div class="table-container">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Nom de la sortie</th>
+                            <th>Date de la sortie</th>
+                            <th>Clôture</th>
+                            <th>Inscrits/places</th>
+                            <th>Etat</th>
+                            <th>Inscrit</th>
+                            <th>Organisateur</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for sortie in sorties %}
+                                {% set fin = sortie.dateHeureDebut|date_modify('+' ~ sortie.duree ~ ' minutes') %}
+
+                                <tr>
+                                    <td>{{ sortie.nom }}</td>
+                                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                                    <td>{{ fin|date('d/m/Y H:i') }}</td>
+                                    <td>{{ sortie.participants|length }}/ {{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat.value }}</td>
+                                    <td>
+                                        {% if app.user %}
+                                            {% if app.user in sortie.participants %}
+                                                <i class="bi bi-check-circle-fill text-succes"></i>
+                                            {% else %}
+                                            {% endif %}
+                                        {% else %}
+                                            Pas d'utilisateur connectées
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ sortie.organisateur.nom }}</td>
+                                    <td>
+                                        {% if app.user %}
+                                            {% if app.user.nom == sortie.organisateur.nom  %}
+                                                {% if sortie.etat.value ==  "Créée" %}
+                                                    <a class="btn btn-outline-secondary" href="#" role="button">Modifier</a>
+                                                    <a class="btn btn-outline-secondary" href="#" role="button">Publier</a>
+                                                {% else %}
+                                                    {% if sortie.etat.value ==  "Ouverte" %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Annuler</a>
+                                                    {% endif %}
+                                                {% endif %}
+
+
+                                            {% else %}
+                                                {% if sortie.etat.value ==  "Activité en cours" %}
+                                                    <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                {% endif %}
+                                                {% if sortie.etat.value ==  "Cloturée" %}
+                                                    <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                {% endif %}
+                                                {% if sortie.etat.value ==  "Ouverte" %}
+                                                    {% if app.user in sortie.participants %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Se désister</a>
+                                                    {% else %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">S'inscrire</a>
+                                                    {% endif %}
+
+                                                {% endif %}
+
+
+                                            {% endif %}
+                                        {% else %}
+                                            Pas d'utilisateur connectées
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p> Pas de sorties prévues</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
