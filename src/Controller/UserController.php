@@ -22,6 +22,19 @@ final class UserController extends AbstractController
         User $userToModify,
         Request $request,
         EntityManagerInterface $em,
+    ): Response {
+        return $this->render('user/view.html.twig', [
+            'controller_name' => 'UserController',
+            'user' => $userToModify,
+        ]);
+    }
+
+    #[IsGranted(UserVoter::EDIT, 'userToModify')]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    public function edit(
+        User $userToModify,
+        Request $request,
+        EntityManagerInterface $em,
     ): Response
     {
         /** @var User $user */
@@ -30,17 +43,13 @@ final class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $userToModify);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && !$this->isGranted(UserVoter::EDIT, $userToModify)){
-            $this->createAccessDeniedException();
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Profil mise à jour');
+            $this->addFlash('success', 'Profil mis à jour');
             return $this->redirectToRoute('users_view', ['id' => $userToModify->getId()]);
         }
 
-        return $this->render('user/view.html.twig', [
+        return $this->render('user/edit.html.twig', [
             'controller_name' => 'UserController',
             'form' => $form,
             'user' => $userToModify,

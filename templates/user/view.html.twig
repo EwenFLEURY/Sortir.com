@@ -13,24 +13,38 @@
         {% if app.user == user %}
             Mon Profil :
         {% else %}
-            Profil de {{ user.username }} :
+            {{ user.username }} :
         {% endif %}
     </h1>
 
-    {{ form_start(form) }}
     <div class="row g-3">
-        <div class="col-md-6">{{ form_row(form.email) }}</div>
-        <div class="col-md-6">{{ form_row(form.username) }}</div>
-        <div class="col-md-6">{{ form_row(form.prenom) }}</div>
-        <div class="col-md-6">{{ form_row(form.nom) }}</div>
-        <div class="col-md-6">{{ form_row(form.telephone) }}</div>
+        <div class="input-group">
+            <label for="prenom" class="col-2">Prénom :</label>
+            <input id="prenom" class="form-control" type="text" value="{{ user.prenom }}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="nom" class="col-2">Nom :</label>
+            <input id="nom" class="form-control" type="text" value="{{ user.nom }}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="telephone" class="col-2">Téléphone :</label>
+            <input id="telephone" class="form-control" type="text" value="{{ user.telephone }}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="email" class="col-2">Email :</label>
+            <input id="email" class="form-control" type="text" value="{{ user.email }}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="site" class="col-2">Site de rattachement :</label>
+            <input id="site" class="form-control" type="text" value="{{ user.site }}" disabled>
+        </div>
     </div>
 
+    <br>
 
-{#    {% if app.user == user %}#}
-        <div class="mt-3">
-            <button class="btn btn-primary" type="submit">Enregistrer</button>
-        </div>
-{#    {% endif %}#}
-    {{ form_end(form) }}
+    <button class="goback btn btn-secondary">Retour</button>
+
+    {% if is_granted('USER_EDIT', user) %}
+        <a class="btn btn-primary" href="{{ path('users_edit', {'id': user.id}) }}">Modifier</a>
+    {% endif %}
 {% endblock %}

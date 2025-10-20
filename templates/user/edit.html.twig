@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if app.user == user %}
+        Mon Profil
+    {% else %}
+        Profil de {{ user.username }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <h1>
+        {% if app.user == user %}
+            Mon Profil :
+        {% else %}
+            Profil de {{ user.username }} :
+        {% endif %}
+    </h1>
+
+    {{ form_start(form) }}
+    <div class="row g-3">
+        <div class="col-md-6">{{ form_row(form.username) }}</div>
+        <div class="col-md-6">{{ form_row(form.prenom) }}</div>
+        <div class="col-md-6">{{ form_row(form.nom) }}</div>
+        <div class="col-md-6">{{ form_row(form.telephone) }}</div>
+        <div class="col-md-6">{{ form_row(form.email) }}</div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+
+    <button class="goback btn btn-secondary">Annuler</button>
+
+    {{ form_end(form) }}
+{% endblock %}
