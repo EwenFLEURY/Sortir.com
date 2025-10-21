@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Enum\Etat;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -72,5 +74,26 @@ final class SortieController extends AbstractController
             'villeLatitude' => $lieu->getLatitude(),
             'villeLongitude' => $lieu->getLongitude(),
         ]);
+    }
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/{id}/cancel', name: 'cancel', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    public function cancel(Sortie $sortie,
+                           UserRepository $userRepository,
+                           Request $request,
+                           EntityManagerInterface $entityManager
+    ): Response
+    {
+        $user = $userRepository->findByMail($this->getUser()->getUserIdentifier());
+
+        if( $user->getNom() != $sortie->getOrganisateur()->getNom()) {
+            $this->addFlash('error', "Tu n'est pas l'organisateur de la sortie");
+            return $this->redirectToRoute('sorties_list');
+        }
+
+        $sortie->setEtat(Etat::Annulee);
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+        $this->addFlash('succes',"La sortie est annulée");
+        return $this->redirectToRoute('sorties_list');
     }
 }

@@ -1,6 +1,6 @@
 // public/js/sorties.js
 
-document.addEventListener('DOMContentLoaded', function() {
+function initSortiesFilters() {
     const filterSelect = document.getElementById('site-filter');
     const nomInput = document.getElementById('nom-filter');
     const dateDebutInput = document.getElementById('date-debut-filter');
@@ -9,30 +9,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const inscritCheckbox = document.getElementById('inscrit-filter');
     const pasInscritCheckbox = document.getElementById('pas-inscrit-filter');
     const passeeCheckbox = document.getElementById('passee-filter');
-    const resetButton = document.getElementById('reset-filters');  // Nouveau
+    const resetButton = document.getElementById('reset-filters');
     const sortiesList = document.getElementById('sorties-list');
-    const noResults = document.getElementById('no-results');
+    const noResults = document.getElementById('no-results'); // si tu l’utilises plus tard
 
-    // Vérifications de débogage (supprime-les une fois que ça marche)
-    console.log('filterSelect:', filterSelect);
-    console.log('nomInput:', nomInput);
-    console.log('dateDebutInput:', dateDebutInput);
-    console.log('dateFinInput:', dateFinInput);
-    console.log('organisateurCheckbox:', organisateurCheckbox);
-    console.log('inscritCheckbox:', inscritCheckbox);
-    console.log('pasInscritCheckbox:', pasInscritCheckbox);
-    console.log('passeeCheckbox:', passeeCheckbox);
-    console.log('resetButton:', resetButton);  // Nouveau
-    console.log('sortiesList:', sortiesList);
-    console.log('noResults:', noResults);
+    // Évite de ré-attacher plusieurs fois si Turbo/Back cache recharge
+    const root = document.body;
+    if (root.dataset.sortiesBound === '1') return;
+    root.dataset.sortiesBound = '1';
 
-    if (!filterSelect || !nomInput || !dateDebutInput || !dateFinInput || !organisateurCheckbox || !inscritCheckbox || !pasInscritCheckbox || !passeeCheckbox || !resetButton || !sortiesList) {  // Ajoute resetButton à la vérif
-        console.error('Éléments DOM manquants.');
+    if (
+        !filterSelect || !nomInput || !dateDebutInput || !dateFinInput ||
+        !organisateurCheckbox || !inscritCheckbox || !pasInscritCheckbox ||
+        !passeeCheckbox || !resetButton || !sortiesList
+    ) {
+        console.error('Éléments DOM manquants pour les filtres de sorties.');
         return;
     }
 
     function applyFilter() {
-        // Le code existant inchangé
         const selectedSiteId = filterSelect.value;
         const nomQuery = nomInput.value.toLowerCase().trim();
         const dateDebut = dateDebutInput.value;
@@ -42,11 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const filterPasInscrit = pasInscritCheckbox.checked;
         const filterPassee = passeeCheckbox.checked;
         const sortieRows = sortiesList.querySelectorAll('tr[data-site-id]');
+
         let visibleCount = 0;
 
         sortieRows.forEach(row => {
             const siteId = row.getAttribute('data-site-id');
-            const nom = row.getAttribute('data-nom') || '';
+            const nom = (row.getAttribute('data-nom') || '').toLowerCase();
             const sortieDate = row.getAttribute('data-date');
             const isOrganisateur = row.getAttribute('data-organisateur') === 'true';
             const isInscrit = row.getAttribute('data-inscrit') === 'true';
@@ -61,7 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const matchesPasInscrit = !filterPasInscrit || !isInscrit;
             const matchesPassee = !filterPassee || isPassee;
 
-            if (matchesSite && matchesNom && matchesDateDebut && matchesDateFin && matchesOrganisateur && matchesInscrit && matchesPasInscrit && matchesPassee) {
+            if (
+                matchesSite && matchesNom && matchesDateDebut && matchesDateFin &&
+                matchesOrganisateur && matchesInscrit && matchesPasInscrit && matchesPassee
+            ) {
                 row.style.display = '';
                 visibleCount++;
             } else {
@@ -69,7 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-
+        if (noResults) {
+            noResults.style.display = visibleCount === 0 ? '' : 'none';
+        }
     }
 
     function resetFilters() {
@@ -84,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
         applyFilter();
     }
 
-    // Écoute les changements sur tous les filtres
     filterSelect.addEventListener('change', applyFilter);
     nomInput.addEventListener('input', applyFilter);
     dateDebutInput.addEventListener('change', applyFilter);
@@ -93,5 +93,12 @@ document.addEventListener('DOMContentLoaded', function() {
     inscritCheckbox.addEventListener('change', applyFilter);
     pasInscritCheckbox.addEventListener('change', applyFilter);
     passeeCheckbox.addEventListener('change', applyFilter);
-    resetButton.addEventListener('click', resetFilters);  // Nouveau : écoute le clic du bouton
-});
+    resetButton.addEventListener('click', resetFilters);
+
+    // Premier passage
+    applyFilter();
+}
+
+document.addEventListener('DOMContentLoaded', initSortiesFilters);
+document.addEventListener('turbo:load', initSortiesFilters);
+window.addEventListener('pageshow', (e) => { if (e.persisted) initSortiesFilters(); });
