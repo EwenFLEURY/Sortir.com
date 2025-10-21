@@ -124,6 +124,9 @@
                                         <td>{{ sortie.organisateur.nom }}</td>
                                         <td>
                                             {% if app.user %}
+                                                {% if is_granted('ROLE_ADMIN') %}
+                                                    <a class="btn btn-outline-secondary" href="{{ url('sorties_cancel',{'id': sortie.id}) }}" role="button">Annuler</a>
+                                                {% endif %}
                                                 {% if app.user.nom == sortie.organisateur.nom  %}
                                                     {% if sortie.etat.value ==  "Créée" %}
                                                         <a class="btn btn-outline-secondary" href="#" role="button">Modifier</a>
