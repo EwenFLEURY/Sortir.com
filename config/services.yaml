@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    import_csv_users_directory: '%env(string:IMPORT_CSV_USERS_DIRECTORY)%'
 
 services:
     # default configuration for services in *this* file

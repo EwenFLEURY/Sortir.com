@@ -29,7 +29,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         if (method_exists($admin, 'setTelephone'))$admin->setTelephone('0600000000');
         if (method_exists($admin, 'setActif'))    $admin->setActif(true);
         if (method_exists($admin, 'setSite'))     $admin->setSite($this->getReference(SiteFixtures::SITE_REF_PREFIX.'0', \App\Entity\Site::class));
-        if (method_exists($admin, 'setPassword')) $admin->setPassword($this->hasher->hashPassword($admin, 'adminpass'));
+        if (method_exists($admin, 'setPassword')) $admin->setPassword($this->hasher->hashPassword($admin, 'password'));
         $manager->persist($admin);
         $this->addReference(self::USER_REF_PREFIX.'admin', $admin);
 

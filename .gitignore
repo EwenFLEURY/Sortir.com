@@ -217,3 +217,5 @@ fabric.properties
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/symfony,eclipse,jetbrains+all,visualstudiocode
+
+public/uploads/
