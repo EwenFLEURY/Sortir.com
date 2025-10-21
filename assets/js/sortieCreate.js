@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const codepSpan = document.getElementById('ville-codep');
     const latitudeSpan = document.getElementById('lieu-latitude');
     const longitudeSpan = document.getElementById('lieu-longitude');
-    selectLieu.addEventListener('change', () => {
+    function updateLieuInfo() {
         const lieuId = selectLieu.value;
         if (!lieuId) {
             villeSpan.textContent = '---';
@@ -31,5 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 latitudeSpan.textContent = 'Erreur de chargement';
                 longitudeSpan.textContent = 'Erreur de chargement';
             });
-    });
+    }
+    selectLieu.addEventListener('change', updateLieuInfo);
+    updateLieuInfo();
 });

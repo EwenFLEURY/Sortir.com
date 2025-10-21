@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% block javascripts %}
+    <script src="{{ asset('js/sortieCreate.js') }}" defer></script>
+{% endblock %}
+
+ {% block body %}
+     {{ form_start(sortieForm, {'attr': {'class': 'container mt-5'}}) }}
+     <h1 class="mb-4">Modifier une sortie</h1>
+     <div class="row">
+         <div class="col-6">
+             <div class="col-md-6 mb-3">
+                 {{ form_row(sortieForm.nom) }}
+             </div>
+             <div class="col-md-6 mb-3">
+                 {{ form_row(sortieForm.dateHeureDebut) }}
+             </div>
+             <div class="col-md-6 mb-3">
+                 {{ form_row(sortieForm.dateLimiteInscription) }}
+             </div>
+             <div class="col-md-6 mb-3">
+                 {{ form_row(sortieForm.nbInscriptionMax) }}
+             </div>
+             <div class="col-md-6 mb-3">
+                 {{ form_row(sortieForm.duree) }}
+             </div>
+             <div class="col-12 mb-3">
+                 {{ form_row(sortieForm.infosSortie) }}
+             </div>
+         </div>
+         <div class="col-6">
+             <div class="col-md-6 mb-3">
+                 {{ form_label(sortieForm.lieu) }}
+                 <div class="d-flex align-items-center">
+                     {{ form_widget(sortieForm.lieu) }}
+                     <span class="ms-2"><i class="bi bi-plus-circle fs-3"></i></span>
+                 </div>
+                 {{ form_errors(sortieForm.lieu) }}
+             </div>
+
+             <div class="col-md-6 mb-3">
+                 <p><strong>Ville :</strong> <span id="ville-name">---</span></p>
+                 <p><strong>Rue :</strong> <span id="lieu-rue">---</span></p>
+                 <p><strong>Code postal :</strong> <span id="ville-codep">---</span></p>
+                 <p><strong>Latitude :</strong> <span id="lieu-latitude">---</span></p>
+                 <p><strong>Longitude :</strong> <span id="lieu-longitude">---</span></p>
+             </div>
+         </div>
+     </div>
+     <div class="d-flex justify-content-center gap-3 mt-4">
+         <button type="submit" name="enregistrer" class="btn btn-primary">Enregistrer</button>
+         <button type="submit" name="publier" class="btn btn-success">Publier la sortie</button>
+         <a href="{{ path('sorties_delete', {'id': sortie.id}) }}" class="btn btn-danger ms-2"
+            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');">
+             Supprimer
+         </a>
+         <a href="" class="btn btn-secondary">Annuler</a>
+     </div>
+     {{ form_end(sortieForm) }}
+ {% endblock %}
+

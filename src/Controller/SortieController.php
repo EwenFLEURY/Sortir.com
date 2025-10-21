@@ -10,6 +10,7 @@ use App\Repository\LieuRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
+use App\Security\Voter\SortieVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +38,7 @@ final class SortieController extends AbstractController
             'sites' => $sites,
         ]);
     }
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(SortieVoter::CREATE)]
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function sortieCreate(LieuRepository $lieuRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -142,6 +143,31 @@ final class SortieController extends AbstractController
     public function show(Sortie $sortie): Response
     {
         return $this->render('sortie/show.html.twig', ['sortie' => $sortie,'participants' => $sortie->getParticipants()->toArray()]);
+    }
+    #[IsGranted(SortieVoter::EDIT,'sortie')]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    public function edit(LieuRepository $lieuRepository, Sortie $sortie, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $lieux = $lieuRepository->findAll();
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $this->addFlash('success','Sortie modifié.');
+            return $this->redirectToRoute('sorties_list');
+        }
+        return $this->render('sortie/edit.html.twig', ['sortieForm' => $sortieForm, 'lieux' => $lieux, 'sortie' => $sortie]);
+    }
+    #[IsGranted(SortieVoter::DELETE,'sortie')]
+    #[Route('/{id}/delete', name: 'delete', methods: ['GET'])]
+    public function delete(Sortie $sortie, EntityManagerInterface $em): Response
+    {
+        $em->remove($sortie);
+        $em->flush();
+        $this->addFlash('success', 'Sortie supprimé');
+        return $this->redirectToRoute('sorties_list');
     }
 
 }

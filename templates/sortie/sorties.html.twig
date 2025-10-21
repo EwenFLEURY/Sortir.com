@@ -129,7 +129,7 @@
                                                 {% endif %}
                                                 {% if app.user.nom == sortie.organisateur.nom  %}
                                                     {% if sortie.etat.value ==  "Créée" %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Modifier</a>
+                                                        <a class="btn btn-outline-secondary" href="{{ path('sorties_edit', {'id': sortie.id}) }}" role="button">Modifier</a>
                                                         <a class="btn btn-outline-secondary" href="#" role="button">Publier</a>
                                                     {% else %}
                                                         {% if sortie.etat.value ==  "Ouverte" %}
