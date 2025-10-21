@@ -1,11 +1,21 @@
 .table-container {
-    max-height: 400px; /* Ajuste selon tes besoins */
-    overflow-y: auto;
+    max-height: 400px; /* Hauteur par défaut sur desktop */
+    overflow-y: auto; /* Scroll vertical */
+    overflow-x: auto; /* Permet le scroll horizontal si nécessaire (via table-responsive) */
 }
+
 .table thead th {
     position: sticky;
     top: 0;
-    background-color: #343a40; /* Couleur de fond pour l'en-tête (comme table-dark) */
+    background-color: #343a40; /* Couleur de fond pour l'en-tête */
     color: white;
     z-index: 1;
 }
+
+/* Media query pour petits écrans : réduire la hauteur pour une meilleure ergonomie */
+@media (max-width: 767px) {
+    .table-container {
+        max-height: 300px; /* Hauteur réduite sur mobile pour économiser l'espace */
+    }
+}
+     
