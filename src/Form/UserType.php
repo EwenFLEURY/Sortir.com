@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Site;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -76,6 +78,11 @@ final class UserType extends AbstractType
                 ],
                 'invalid_message' => 'Les mots de passe ne correspondent pas',
                 'mapped' => false,
+            ])
+            ->add('site', EntityType::class, [
+                'label' => 'Site de rattachement',
+                'class' => Site::class,
+                'choice_label' => 'nom',
             ])
         ;
     }

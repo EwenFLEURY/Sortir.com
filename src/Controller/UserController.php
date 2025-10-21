@@ -22,6 +22,39 @@ final class UserController extends AbstractController
         private readonly UserRepository $userRepository,
     ) {}
 
+    #[IsGranted(UserVoter::CREATE)]
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    public function create(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher,
+    ): Response
+    {
+        $userToCreate = new User();
+
+        $form = $this->createForm(UserType::class, $userToCreate);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get('plainPassword')->getData();
+
+            if ($plainPassword) {
+                $userToCreate->setPassword($passwordHasher->hashPassword($userToCreate, $plainPassword));
+            }
+
+            $em->persist($userToCreate);    
+            $em->flush();
+
+            $this->addFlash('success', 'L\'utilisateur à bien été créer');
+
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        return $this->render('user/create.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
     #[IsGranted(UserVoter::READ_LIST)]
     #[Route('/', name: 'index', methods: ['GET'])]
     public function index(): Response
@@ -39,7 +72,6 @@ final class UserController extends AbstractController
         EntityManagerInterface $em,
     ): Response {
         return $this->render('user/view.html.twig', [
-            'controller_name' => 'UserController',
             'user' => $userToModify,
         ]);
     }
@@ -74,7 +106,6 @@ final class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', [
-            'controller_name' => 'UserController',
             'form' => $form,
             'user' => $userToModify,
         ]);

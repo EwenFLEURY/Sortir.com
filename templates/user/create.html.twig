@@ -1,21 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-    {% if app.user == user %}
-        Mon Profil
-    {% else %}
-        Profil de {{ user.username }}
-    {% endif %}
-{% endblock %}
+{% block title %}Création d'un nouvel utilisateur{% endblock %}
 
 {% block body %}
-    <h1>
-        {% if app.user == user %}
-            Mon Profil :
-        {% else %}
-            Profil de {{ user.username }} :
-        {% endif %}
-    </h1>
+    <h1>Création d'un nouvel utilisateur</h1>
 
     {{ form_start(form) }}
     <div class="row g-3">
@@ -28,7 +16,7 @@
         <div class="col-md-6">{{ form_row(form.plainPassword) }}</div>
     </div>
 
-    <button class="btn btn-primary" type="submit">Enregistrer</button>
+    <button class="btn btn-primary" type="submit">Créer</button>
 
     <a class="goback btn btn-secondary" href="">Annuler</a>
 
