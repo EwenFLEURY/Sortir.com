@@ -40,8 +40,8 @@
                                 </ol>
                             </td>
                             <td>
-                                <a class="btn btn-outline-secondary" href="" role="button">Modifier</a>
-                                <a class="btn btn-outline-secondary" href="" role="button">Supprimer</a>
+                                <a class="btn btn-outline-secondary" href="{{ path('villes_edit', {'id': ville.id}) }}" role="button">Modifier</a>
+                                <a class="btn btn-outline-secondary" href="{{ path('villes_delete', {'id': ville.id}) }}" role="button" onclick="return confirm('Es-tu sûr de vouloir supprimer cette ville ?');">Supprimer</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -52,7 +52,7 @@
             <p>Pas de villes</p>
         {% endif %}
 
-        <a class="btn btn-outline-secondary mt-3" href="" role="button">Ajouter</a>
+        <a class="btn btn-outline-secondary mt-3" href="{{ path('villes_add') }}" role="button">Ajouter</a>
 
     </div>
     {% block javascripts %}

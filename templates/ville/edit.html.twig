@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="
+    container">
+        <h4>Editer la ville</h4>
+        <div>
+            {{ form_start(villeForm) }}
+            {{ form_row(villeForm.nom) }}
+            {{ form_row(villeForm.codePostal) }}
+
+            <button type="submit" class="btn btn-primary btn-sm">Editer</button>
+            {{ form_end(villeForm) }}
+        </div>
+    </div>
+{% endblock %}

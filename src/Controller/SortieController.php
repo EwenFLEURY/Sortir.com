@@ -74,7 +74,7 @@ final class SortieController extends AbstractController
     }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/subscribe/{id}', name: 'subscribe', methods: ['GET'])]
+    #[Route('/{id}/subscribe', name: 'subscribe', requirements: ['id' => '\\d+'], methods: ['GET'])]
     public function subscribe(Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         $participants = $sortie->getParticipants()->toArray();
@@ -97,7 +97,7 @@ final class SortieController extends AbstractController
     }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/unsubscribe/{id}', name: 'unsubscribe', methods: ['GET'])]
+    #[Route('/{id}/unsubscribe', name: 'unsubscribe', requirements: ['id' => '\\d+'], methods: ['GET'])]
     public function unsubscribe(Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         $participants = $sortie->getParticipants()->toArray();
