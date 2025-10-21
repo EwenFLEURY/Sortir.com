@@ -151,7 +151,9 @@
                                                             <a class="btn btn-outline-secondary" href="{{ path('sorties_unsubscribe', {'id': sortie.id}) }}" role="button">Se désister</a>
                                                         {% else %}
                                                             <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
-                                                            <a class="btn btn-outline-secondary" href="{{ path('sorties_subscribe', {'id': sortie.id}) }}" role="button">S'inscrire</a>
+                                                            {% if sortie.participants|length < sortie.nbInscriptionMax %}
+                                                                <a class="btn btn-outline-secondary" href="{{ path('sorties_subscribe', {'id': sortie.id}) }}" role="button">S'inscrire</a>
+                                                            {% endif %}
                                                         {% endif %}
 
                                                     {% endif %}
