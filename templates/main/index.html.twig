@@ -1,20 +1,67 @@
+{# templates/main/index.html.twig #}
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
 
-{% block title %}Hello MainController!{% endblock %}
-
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+{% endblock %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <section class="hero-landing text-center text-white py-5 position-relative overflow-hidden">
+        <div class="hero-overlay"></div>
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10">
+                    <h1 class="display-4 fw-bold mb-3">Sorties Entreprises</h1>
+                    <p class="lead mb-4">
+                        Créez des moments inoubliables pour renforcer la cohésion de vos équipes.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{{ path('sorties_list') }}" class="btn btn-primary btn-lg px-4 shadow-sm" aria-label="Commencer maintenant">
+                            Commencer maintenant
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    </section>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/projet/Sortir.com/Sortir.com/src/Controller/MainController.php</code></li>
-        <li>Your template at <code>D:/projet/Sortir.com/Sortir.com/templates/main/index.html.twig</code></li>
-    </ul>
-</div>
+    <section id="features" class="py-5 bg-light">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold">Planification facile</h5>
+                            <p class="card-text mb-0">
+                                Organisez des sorties personnalisées en quelques clics&nbsp;: team building, séminaires, activités sportives…
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold">Options variées</h5>
+                            <p class="card-text mb-0">
+                                Choisissez parmi des activités nature, ateliers créatifs, événements culturels et bien plus encore.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold">Gestion intégrale</h5>
+                            <p class="card-text mb-0">
+                                Gérez inscriptions, listes d’attente, annulations et communication en un seul endroit.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
 {% endblock %}
