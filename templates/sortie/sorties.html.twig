@@ -130,29 +130,29 @@
                                                         <a class="btn btn-outline-secondary" href="#" role="button">Publier</a>
                                                     {% else %}
                                                         {% if sortie.etat.value ==  "Ouverte" %}
-                                                            <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                            <a class="btn btn-outline-secondary" href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                             <a class="btn btn-outline-secondary" href="{{ url('sorties_cancel',{'id': sortie.id}) }}" role="button">Annuler</a>
                                                         {% endif %}
                                                     {% endif %}
                                                     {% if sortie.etat.value ==  "Annulée"   %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary"href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                     {% endif %}
                                                     {% if sortie.etat.value ==  "Passée"  %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                     {% endif %}
                                                 {% else %}
                                                     {% if sortie.etat.value ==  "Activité en cours" %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                     {% endif %}
                                                     {% if sortie.etat.value ==  "Cloturée" %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                     {% endif %}
                                                     {% if sortie.etat.value ==  "Ouverte" %}
                                                         {% if app.user in sortie.participants %}
-                                                            <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                            <a class="btn btn-outline-secondary"href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                             <a class="btn btn-outline-secondary" href="{{ path('sorties_unsubscribe', {'id': sortie.id}) }}" role="button">Se désister</a>
                                                         {% else %}
-                                                            <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                            <a class="btn btn-outline-secondary" href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
 
                                                             {% if sortie.participants|length < sortie.nbInscriptionMax and sortie.dateLimiteInscription|date("U") > "now"|date("U") %}
                                                                 <a class="btn btn-outline-secondary" href="{{ path('sorties_subscribe', {'id': sortie.id}) }}" role="button">S'inscrire</a>
@@ -161,10 +161,10 @@
 
                                                     {% endif %}
                                                     {% if sortie.etat.value ==  "Annulée"   %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                     {% endif %}
                                                     {% if sortie.etat.value ==  "Passée"  %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                        <a class="btn btn-outline-secondary" href="{{ path('sorties_show', {'id': sortie.id}) }}" role="button">Afficher</a>
                                                     {% endif %}
 
                                                 {% endif %}
