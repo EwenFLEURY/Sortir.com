@@ -25,7 +25,7 @@
 
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item mx-2">
-                            <a class="nav-link text-light hover-underline" href="#">Villes</a>
+                            <a class="nav-link text-light hover-underline" href="{{ path('villes_list') }}">Villes</a>
                         </li>
                         <li class="nav-item mx-2">
                             <a class="nav-link text-light hover-underline" href="#">Sites</a>
@@ -33,16 +33,8 @@
                     {% endif %}
 
                     {% if app.user %}
-                        <li class="nav-item dropdown mx-2">
-                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ app.user.pseudo ?? 'Mon profil' }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-sm" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ path('users_view', {'id': app.user.id}) }}">Voir mon profil</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Se déconnecter</a></li>
-                            </ul>
-                        </li>
+                        <li><a class="nav-link text-light hover-underline" href="{{ path('users_view', {'id': app.user.id}) }}">Voir mon profil</a></li>
+                        <li><a class="nav-link text-light hover-underline" href="{{ path('app_logout') }}">Se déconnecter</a></li>
                     {% else %}
                         <li class="nav-item mx-2">
                             <a class="btn btn-outline-light btn-sm px-3" href="{{ path('app_login') }}">Se connecter</a>
