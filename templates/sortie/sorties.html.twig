@@ -85,7 +85,8 @@
                         <tr>
                             <th>Nom de la sortie</th>
                             <th>Date de la sortie</th>
-                            <th>Clôture</th>
+                            <th>Fin de la sortie </th>
+                            <th>Cloture inscription </th>
                             <th>Inscrits/places</th>
                             <th>Etat</th>
                             <th>Inscrit</th>
@@ -107,6 +108,7 @@
                                         <td>{{ sortie.nom }}</td>
                                         <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
                                         <td>{{ fin|date('d/m/Y H:i') }}</td>
+                                        <td>{{ sortie.dateLimiteInscription|date('d/m/Y H:i') }}</td>
                                         <td>{{ sortie.participants|length }}/ {{ sortie.nbInscriptionMax }}</td>
                                         <td>{{ sortie.etat.value }}</td>
                                         <td>
