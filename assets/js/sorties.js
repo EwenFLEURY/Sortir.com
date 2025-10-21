@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const inscritCheckbox = document.getElementById('inscrit-filter');
     const pasInscritCheckbox = document.getElementById('pas-inscrit-filter');
     const passeeCheckbox = document.getElementById('passee-filter');
+    const resetButton = document.getElementById('reset-filters');  // Nouveau
     const sortiesList = document.getElementById('sorties-list');
     const noResults = document.getElementById('no-results');
 
@@ -21,15 +22,17 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('inscritCheckbox:', inscritCheckbox);
     console.log('pasInscritCheckbox:', pasInscritCheckbox);
     console.log('passeeCheckbox:', passeeCheckbox);
+    console.log('resetButton:', resetButton);  // Nouveau
     console.log('sortiesList:', sortiesList);
     console.log('noResults:', noResults);
 
-    if (!filterSelect || !nomInput || !dateDebutInput || !dateFinInput || !organisateurCheckbox || !inscritCheckbox || !pasInscritCheckbox || !passeeCheckbox || !sortiesList) {
+    if (!filterSelect || !nomInput || !dateDebutInput || !dateFinInput || !organisateurCheckbox || !inscritCheckbox || !pasInscritCheckbox || !passeeCheckbox || !resetButton || !sortiesList) {  // Ajoute resetButton à la vérif
         console.error('Éléments DOM manquants.');
         return;
     }
 
     function applyFilter() {
+        // Le code existant inchangé
         const selectedSiteId = filterSelect.value;
         const nomQuery = nomInput.value.toLowerCase().trim();
         const dateDebut = dateDebutInput.value;
@@ -69,6 +72,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
+    function resetFilters() {
+        filterSelect.value = '';
+        nomInput.value = '';
+        dateDebutInput.value = '';
+        dateFinInput.value = '';
+        organisateurCheckbox.checked = false;
+        inscritCheckbox.checked = false;
+        pasInscritCheckbox.checked = false;
+        passeeCheckbox.checked = false;
+        applyFilter();
+    }
+
     // Écoute les changements sur tous les filtres
     filterSelect.addEventListener('change', applyFilter);
     nomInput.addEventListener('input', applyFilter);
@@ -78,4 +93,5 @@ document.addEventListener('DOMContentLoaded', function() {
     inscritCheckbox.addEventListener('change', applyFilter);
     pasInscritCheckbox.addEventListener('change', applyFilter);
     passeeCheckbox.addEventListener('change', applyFilter);
+    resetButton.addEventListener('click', resetFilters);  // Nouveau : écoute le clic du bouton
 });

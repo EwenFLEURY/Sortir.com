@@ -69,7 +69,9 @@
                     </div>
                 {% endif %}
                 </div>
-                <div class="col"></div>
+                <div class="col d-flex justify-content-center align-items-center">
+                    <button type="button" id="reset-filters" class="btn btn-outline-secondary">Réinitialiser les filtres</button>
+                </div>
             </div>
         </div>
     </div>
@@ -95,69 +97,78 @@
                             {% for sortie in sorties %}
                                 {% set fin = sortie.dateHeureDebut|date_modify('+' ~ sortie.duree ~ ' minutes') %}
 
-                                <tr data-site-id="{{ sortie.site ? sortie.site.id : '' }}"
-                                    data-sortie-name="{{ sortie.nom ? sortie.nom|lower : '—' }}"
-                                    data-date="{{ sortie.dateHeureDebut|date('Y-m-d') }}"
-                                    data-organisateur="{{ app.user and app.user.nom == sortie.organisateur.nom ? 'true' : 'false' }}"
-                                    data-inscrit="{{ app.user and app.user in sortie.participants ? 'true' : 'false' }}"
-                                    data-passee="{{ (fin|date('U')) < ('now'|date('U')) ? 'true' : 'false' }}">
-                                    <td>{{ sortie.nom }}</td>
-                                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
-                                    <td>{{ fin|date('d/m/Y H:i') }}</td>
-                                    <td>{{ sortie.participants|length }}/ {{ sortie.nbInscriptionMax }}</td>
-                                    <td>{{ sortie.etat.value }}</td>
-                                    <td>
-                                        {% if app.user %}
-                                            {% if app.user in sortie.participants %}
-                                                <i class="bi bi-check-circle-fill text-succes"></i>
-                                            {% else %}
-                                            {% endif %}
-                                        {% else %}
-                                            Pas d'utilisateur connectées
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ sortie.organisateur.nom }}</td>
-                                    <td>
-                                        {% if app.user %}
-                                            {% if app.user.nom == sortie.organisateur.nom  %}
-                                                {% if sortie.etat.value ==  "Créée" %}
-                                                    <a class="btn btn-outline-secondary" href="#" role="button">Modifier</a>
-                                                    <a class="btn btn-outline-secondary" href="#" role="button">Publier</a>
+                                {% if sortie.dateheureDebut > date('-1 month') %}
+                                    <tr data-site-id="{{ sortie.site ? sortie.site.id : '' }}"
+                                        data-sortie-name="{{ sortie.nom ? sortie.nom|lower : '—' }}"
+                                        data-date="{{ sortie.dateHeureDebut|date('Y-m-d') }}"
+                                        data-organisateur="{{ app.user and app.user.nom == sortie.organisateur.nom ? 'true' : 'false' }}"
+                                        data-inscrit="{{ app.user and app.user in sortie.participants ? 'true' : 'false' }}"
+                                        data-passee="{{ (fin|date('U')) < ('now'|date('U')) ? 'true' : 'false' }}">
+                                        <td>{{ sortie.nom }}</td>
+                                        <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                                        <td>{{ fin|date('d/m/Y H:i') }}</td>
+                                        <td>{{ sortie.participants|length }}/ {{ sortie.nbInscriptionMax }}</td>
+                                        <td>{{ sortie.etat.value }}</td>
+                                        <td>
+                                            {% if app.user %}
+                                                {% if app.user in sortie.participants %}
+                                                    <i class="bi bi-check-circle-fill text-success text-center"></i>
                                                 {% else %}
-                                                    {% if sortie.etat.value ==  "Ouverte" %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Annuler</a>
-                                                    {% endif %}
                                                 {% endif %}
-
-
                                             {% else %}
-                                                {% if sortie.etat.value ==  "Activité en cours" %}
-                                                    <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
-                                                {% endif %}
-                                                {% if sortie.etat.value ==  "Cloturée" %}
-                                                    <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
-                                                {% endif %}
-                                                {% if sortie.etat.value ==  "Ouverte" %}
-                                                    {% if app.user in sortie.participants %}
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">Se désister</a>
+                                                Pas d'utilisateur connectées
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ sortie.organisateur.nom }}</td>
+                                        <td>
+                                            {% if app.user %}
+                                                {% if app.user.nom == sortie.organisateur.nom  %}
+                                                    {% if sortie.etat.value ==  "Créée" %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Modifier</a>
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Publier</a>
                                                     {% else %}
+                                                        {% if sortie.etat.value ==  "Ouverte" %}
+                                                            <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                            <a class="btn btn-outline-secondary" href="#" role="button">Annuler</a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {% if sortie.etat.value ==  "Annulée"   %}
                                                         <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
-                                                        <a class="btn btn-outline-secondary" href="#" role="button">S'inscrire</a>
+                                                    {% endif %}
+                                                    {% if sortie.etat.value ==  "Passée"  %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if sortie.etat.value ==  "Activité en cours" %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                    {% endif %}
+                                                    {% if sortie.etat.value ==  "Cloturée" %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                    {% endif %}
+                                                    {% if sortie.etat.value ==  "Ouverte" %}
+                                                        {% if app.user in sortie.participants %}
+                                                            <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                            <a class="btn btn-outline-secondary" href="#" role="button">Se désister</a>
+                                                        {% else %}
+                                                            <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                            <a class="btn btn-outline-secondary" href="#" role="button">S'inscrire</a>
+                                                        {% endif %}
+
+                                                    {% endif %}
+                                                    {% if sortie.etat.value ==  "Annulée"   %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
+                                                    {% endif %}
+                                                    {% if sortie.etat.value ==  "Passée"  %}
+                                                        <a class="btn btn-outline-secondary" href="#" role="button">Afficher</a>
                                                     {% endif %}
 
                                                 {% endif %}
-
-
+                                            {% else %}
+                                                Pas d'utilisateur connectées
                                             {% endif %}
-                                        {% else %}
-                                            Pas d'utilisateur connectées
-                                        {% endif %}
-                                    </td>
-                                </tr>
-
-
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -166,6 +177,13 @@
                 <p> Pas de sorties prévues</p>
             {% endif %}
 
+        </div>
+
+    </div>
+
+    <div name="create" class="mt-3">
+        <div class="container">
+            <a id="reset-filters" class="btn btn-outline-secondary" href="{{ url('sorties_create') }}">Créer une sortie</a>
         </div>
     </div>
 
