@@ -34,7 +34,7 @@
 
                     {% if app.user %}
                         <li><a class="nav-link text-light hover-underline" href="{{ path('users_view', {'id': app.user.id}) }}">Voir mon profil</a></li>
-                        <li><a class="nav-link text-light hover-underline" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        <li><a class="btn btn-outline-light btn-sm px-3" href="{{ path('app_logout') }}">Se déconnecter</a></li>
                     {% else %}
                         <li class="nav-item mx-2">
                             <a class="btn btn-outline-light btn-sm px-3" href="{{ path('app_login') }}">Se connecter</a>
