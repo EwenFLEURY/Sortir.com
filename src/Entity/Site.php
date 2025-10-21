@@ -23,13 +23,13 @@ class Site
     /**
      * @var Collection<int, Sortie>
      */
-    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'site')]
+    #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'site', cascade: ['remove'])]
     private Collection $sorties;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'site')]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'site', cascade: ['remove'])]
     private Collection $participants;
 
     public function __construct()

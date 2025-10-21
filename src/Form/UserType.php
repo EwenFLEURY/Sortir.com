@@ -5,9 +5,15 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 final class UserType extends AbstractType
 {
@@ -38,7 +44,40 @@ final class UserType extends AbstractType
                 'required' => false,
                 // Keep default '' if left empty; adjust to null if you prefer
                 // 'empty_data' => null,
-            ]);
+            ])
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'required' => false,
+                'options' => [
+                    'attr' => [
+                        'autocomplete' => 'new-password',
+                    ],
+                ],
+                'first_options' => [
+                    'constraints' => [
+//                        new NotBlank(['message' => 'Veuillez renseigner un mot de passe']),
+                        new Length([
+                            'min' => 8,
+                            'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
+                            // max length allowed by Symfony for security reasons
+                            'max' => 4096,
+                        ]),
+                        new PasswordStrength(
+                            message: 'Le niveau de sécurité du mot de passe est trop faible. Veuillez utiliser un mot de passe plus fort.'
+                        ),
+                        new NotCompromisedPassword(
+                            message: 'Ce mot de passe a été divulgué suite à une violation de données, il ne doit pas être utilisé. Veuillez utiliser un autre mot de passe.',
+                        ),
+                    ],
+                    'label' => 'Mot de passe',
+                ],
+                'second_options' => [
+                    'label' => 'Confirmation',
+                ],
+                'invalid_message' => 'Les mots de passe ne correspondent pas',
+                'mapped' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

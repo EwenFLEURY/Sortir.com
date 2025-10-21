@@ -24,11 +24,12 @@
         <div class="col-md-6">{{ form_row(form.nom) }}</div>
         <div class="col-md-6">{{ form_row(form.telephone) }}</div>
         <div class="col-md-6">{{ form_row(form.email) }}</div>
+        <div class="col-md-6">{{ form_row(form.plainPassword) }}</div>
     </div>
 
     <button class="btn btn-primary" type="submit">Enregistrer</button>
 
-    <button class="goback btn btn-secondary">Annuler</button>
+    <a class="goback btn btn-secondary" href="">Annuler</a>
 
     {{ form_end(form) }}
 {% endblock %}
