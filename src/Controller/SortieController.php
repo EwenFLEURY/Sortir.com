@@ -138,6 +138,10 @@ final class SortieController extends AbstractController
         $this->addFlash('succes',"La sortie est annulée");
         return $this->redirectToRoute('sorties_list');
     }
-
+    #[Route('/show/{id}', name: 'show', methods: ['GET'])]
+    public function show(Sortie $sortie): Response
+    {
+        return $this->render('sortie/show.html.twig', ['sortie' => $sortie,'participants' => $sortie->getParticipants()->toArray()]);
+    }
 
 }

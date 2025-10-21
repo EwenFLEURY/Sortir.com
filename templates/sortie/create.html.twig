@@ -29,8 +29,14 @@
          </div>
          <div class="col-6">
              <div class="col-md-6 mb-3">
-                 {{ form_row(sortieForm.lieu) }}
+                 {{ form_label(sortieForm.lieu) }}
+                 <div class="d-flex align-items-center">
+                     {{ form_widget(sortieForm.lieu) }}
+                     <span class="ms-2"><i class="bi bi-plus-circle fs-3"></i></span>
+                 </div>
+                 {{ form_errors(sortieForm.lieu) }}
              </div>
+
              <div class="col-md-6 mb-3">
                  <p><strong>Ville :</strong> <span id="ville-name">---</span></p>
                  <p><strong>Rue :</strong> <span id="lieu-rue">---</span></p>
