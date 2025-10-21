@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const selectLieu = document.getElementById('{{ sortieForm.lieu.vars.id }}');
+    const selectLieu = document.getElementById('sortie_lieu');
     const villeSpan = document.getElementById('ville-name');
     const rueSpan = document.getElementById('lieu-rue');
     const codepSpan = document.getElementById('ville-codep');

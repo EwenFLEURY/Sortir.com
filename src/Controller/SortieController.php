@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Enum\Etat;
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
@@ -37,7 +38,7 @@ final class SortieController extends AbstractController
         ]);
     }
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/create', name: 'create', methods: ['GET','POST'])]
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function sortieCreate(LieuRepository $lieuRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $lieux = $lieuRepository->findAll();
@@ -54,19 +55,15 @@ final class SortieController extends AbstractController
             }
             $entityManager->persist($sortie);
             $entityManager->flush();
-            $this->addFlash('success','Idée ajouté.');
+            $this->addFlash('success', 'Sortie Ajouter.');
             return $this->redirectToRoute('sorties_list');
         }
-        return $this->render('sortie/create.html.twig', [ 'sortieForm' => $sortieForm, 'lieux' => $lieux]);
+        return $this->render('sortie/create.html.twig', ['sortieForm' => $sortieForm, 'lieux' => $lieux]);
     }
-    #[Route('/lieu-info/{id}', name: 'lieu_info', methods: ['GET'])]
-    public function lieuInfo(int $id, LieuRepository $lieuRepository): JsonResponse
-    {
-        $lieu = $lieuRepository->find($id);
 
-        if (!$lieu) {
-            return new JsonResponse(['error' => 'Lieu not found'], 404);
-        }
+    #[Route('/lieu-info/{id}', name: 'lieu_info', methods: ['GET'])]
+    public function lieuInfo(Lieu $lieu): JsonResponse
+    {
         return new JsonResponse([
             'villeNom' => $lieu->getVille()?->getNom(),
             'lieuRue' => $lieu->getRue(),
@@ -74,6 +71,50 @@ final class SortieController extends AbstractController
             'villeLatitude' => $lieu->getLatitude(),
             'villeLongitude' => $lieu->getLongitude(),
         ]);
+    }
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/subscribe/{id}', name: 'subscribe', methods: ['GET'])]
+    public function subscribe(Sortie $sortie, EntityManagerInterface $entityManager): Response
+    {
+        $participants = $sortie->getParticipants()->toArray();
+        $userParticipant = false;
+        foreach ($participants as $participant) {
+            if ($participant === $this->getUser()) {
+                $userParticipant = true;
+            }
+        }
+        if ($sortie->getEtat() == Etat::Ouverte && !$userParticipant) {
+            $sortie->addParticipant($this->getUser());
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $this->addFlash('success','Inscription réussite.');
+            return $this->redirectToRoute('sorties_list');
+        }
+        $this->addFlash('danger','Erreur lors de l\'inscription');
+        return $this->redirectToRoute('sorties_list');
+    }
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/unsubscribe/{id}', name: 'unsubscribe', methods: ['GET'])]
+    public function unsubscribe(Sortie $sortie, EntityManagerInterface $entityManager): Response
+    {
+        $participants = $sortie->getParticipants()->toArray();
+        $userParticipant = false;
+        foreach ($participants as $participant) {
+            if ($participant === $this->getUser()) {
+                $userParticipant = true;
+            }
+        }
+        if ($sortie->getEtat() == Etat::Ouverte && $userParticipant) {
+            $sortie->removeParticipant($this->getUser());
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $this->addFlash('success','Désinscription réussite.');
+            return $this->redirectToRoute('sorties_list');
+        }
+        $this->addFlash('danger','Erreur lors de la d\'ésinscription');
+        return $this->redirectToRoute('sorties_list');
     }
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/cancel', name: 'cancel', requirements: ['id' => '\\d+'], methods: ['GET'])]
@@ -96,4 +137,6 @@ final class SortieController extends AbstractController
         $this->addFlash('succes',"La sortie est annulée");
         return $this->redirectToRoute('sorties_list');
     }
+
+
 }
