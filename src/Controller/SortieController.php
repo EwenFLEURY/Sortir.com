@@ -84,7 +84,8 @@ final class SortieController extends AbstractController
                 $userParticipant = true;
             }
         }
-        if ($sortie->getEtat() == Etat::Ouverte && !$userParticipant && $sortie->getNbInscriptionMax() >= count($participants) + 1) {
+
+        if ($sortie->getEtat() == Etat::Ouverte && !$userParticipant && $sortie->getNbInscriptionMax() >= count($participants) + 1 && $sortie->getDateLimiteInscription()->getTimestamp() > (new \DateTimeImmutable())->getTimestamp()) {
             $sortie->addParticipant($this->getUser());
             $entityManager->persist($sortie);
             $entityManager->flush();
