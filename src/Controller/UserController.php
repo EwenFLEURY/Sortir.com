@@ -6,20 +6,20 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Security\Voter\UserVoter;
+use App\Service\FileService;
 use App\Service\ImportCsvService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Throwable;
 
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[Route('/users', name: 'users_')]
@@ -30,6 +30,7 @@ final class UserController extends AbstractController
 
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly FileService $fileService,
         ParameterBagInterface $params,
     ) {
         $this->importCsvDirectory = $params->get('import_csv_users_directory');
@@ -84,12 +85,6 @@ final class UserController extends AbstractController
 
         /** @var UploadedFile|null $file */
         $file = $request->files->get('file');
-        if(!$file) {
-            return $this->json([
-                'success' => false,
-                'message' => 'Aucun fichier reçu.'
-            ], 400);
-        }
 
         $allowed = [
             'text/csv',
@@ -97,27 +92,34 @@ final class UserController extends AbstractController
             'application/csv',
             'application/vnd.ms-excel',
         ];
-        if (!in_array($file->getMimeType() ?? '', $allowed, true)) {
+
+        $targetDir = $this->importCsvDirectory;
+
+        if(!$file) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Aucun fichier reçu.'
+            ], 400);
+        }
+
+        if (!$this->fileService->isFileMimeType($file, $allowed)) {
             return $this->json([
                 'success' => false,
                 'message' => 'Type de fichier non autorisé (CSV attendu)',
             ], 415);
         }
 
-        $targetDir = $this->importCsvDirectory;
-        if (!is_dir($targetDir) && !@mkdir($targetDir, 0775, true) && !is_dir($targetDir)) {
+        if (!$this->fileService->createDirectory($targetDir)) {
             return $this->json([
                 'success' => false,
                 'message' => 'Impossible de créer le répertoire de dépôt',
             ], 500);
         }
 
-        $safeName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $ext = strtolower((string) $file->guessExtension() ?: 'csv');
-        $stored = sprintf('%s_%s.%s', $safeName, bin2hex(random_bytes(6)), $ext);
+        $stored = $this->fileService->createSafeName($file, 'csv');
 
         try {
-            $moved = $file->move($targetDir, $stored);
+            $fullPath = $this->fileService->moveFileToDirectory($file, $targetDir, $stored);
         } catch (Exception $e) {
             return $this->json([
                 'success' => false,
@@ -125,25 +127,21 @@ final class UserController extends AbstractController
             ], 500);
         }
 
-        $fullPath = $moved->getRealPath() ?: $targetDir . '/' . $stored;
-
         try {
             $count = $importCsvService->import($fullPath);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->json([
                 'success' => false,
                 'message' => 'Erreur import: ' . $e->getMessage(),
             ], 500);
         }
 
-        try {
-            @unlink($fullPath);
-        } catch (\Throwable $e) {}
+        $this->fileService->supprimerFichier($fullPath);
 
         return $this->json([
             'success' => true,
             'message' => "Import terminé avec succès ($count lignes). Actualisation en cours ...",
-        ], 200);
+        ]);
     }
 
     #[IsGranted(UserVoter::READ_LIST)]
@@ -157,11 +155,7 @@ final class UserController extends AbstractController
 
     #[IsGranted(UserVoter::READ)]
     #[Route('/{id}', name: 'view', methods: ['GET', 'POST'])]
-    public function view(
-        User $userToModify,
-        Request $request,
-        EntityManagerInterface $em,
-    ): Response {
+    public function view(User $userToModify): Response {
         return $this->render('user/view.html.twig', [
             'user' => $userToModify,
         ]);
@@ -176,9 +170,6 @@ final class UserController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
     ): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
         $form = $this->createForm(UserType::class, $userToModify);
         $form->handleRequest($request);
 
