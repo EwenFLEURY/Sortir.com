@@ -35,7 +35,9 @@
                             <td>
                                 <ol class="list-group ">
                                     {% for membre in groupe.members %}
-                                        <li class="list-group-item">{{ membre.nom }}</li>
+                                            <a href="{{ path('users_view', {'id': membre.id}) }}" class="text-decoration-none text-dark">
+                                                <li class="list-group-item">{{ membre.nom }}</li>
+                                            </a>
                                     {% endfor %}
                                 </ol>
                             </td>
