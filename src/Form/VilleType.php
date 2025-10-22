@@ -20,7 +20,7 @@ class VilleType extends AbstractType
             ->add('nom', TextareaType::class, [
                 'label' => 'Nom',
                 'attr' => [
-                    'placeholder' => 'Nom',
+                    'placeholder' => 'Nom de la ville',
                 ],
                 'required' => true,
                 'constraints' => [

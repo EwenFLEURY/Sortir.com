@@ -8,6 +8,7 @@ use App\Entity\Ville;
 use App\Form\VilleType;
 use App\Repository\UserRepository;
 use App\Repository\VilleRepository;
+use App\Security\Voter\VilleVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ final class VilleController extends AbstractController
 
     ) {
     }
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(VilleVoter::VIEW)]
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(): Response
     {
@@ -34,7 +35,7 @@ final class VilleController extends AbstractController
         ]);
     }
 
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(VilleVoter::EDIT)]
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\\d+'], methods: ['GET','POST'])]
     public function edit(Ville $ville,
                            Request $request,
@@ -55,7 +56,7 @@ final class VilleController extends AbstractController
 
 
     }
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(VilleVoter::ADD)]
     #[Route('/add', name: 'add', methods: ['GET','POST'])]
     public function add(Request $request,
                         EntityManagerInterface $entityManager
@@ -69,12 +70,13 @@ final class VilleController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success',"Ville ajouter avec succes");
             return $this->redirectToRoute('villes_list');
+
         }
         return $this->render('ville/add.html.twig', [
             'villeForm' => $villeForm,
         ]);
     }
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(VilleVoter::DELETE)]
     #[Route('/{id}/delete', name: 'delete', requirements: ['id' => '\\d+'], methods: ['GET','POST'])]
     public function delete(Ville $ville,
                          Request $request,

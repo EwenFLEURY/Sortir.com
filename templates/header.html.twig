@@ -37,6 +37,9 @@
                     {% endif %}
 
                     {% if app.user %}
+                        {% if not is_granted('ROLE_ADMIN') %}
+                            <li><a class="nav-link text-light hover-underline" href="{{ path('villes_list') }}">Villes</a></li>
+                        {% endif %}
                         <li><a class="nav-link text-light hover-underline" href="{{ path('groupes_list') }}">Voir mes groupes</a></li>
                         <li><a class="nav-link text-light hover-underline" href="{{ path('users_view', {'id': app.user.id}) }}">Voir mon profil</a></li>
                         <li><a class="btn btn-outline-light btn-sm px-3" href="{{ path('app_logout') }}">Se déconnecter</a></li>

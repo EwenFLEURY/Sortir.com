@@ -40,8 +40,10 @@
                                 </ol>
                             </td>
                             <td>
-                                <a class="btn btn-outline-secondary" href="{{ path('villes_edit', {'id': ville.id}) }}" role="button">Modifier</a>
-                                <a class="btn btn-outline-secondary" href="{{ path('villes_delete', {'id': ville.id}) }}" role="button" onclick="return confirm('Es-tu sûr de vouloir supprimer cette ville ?');">Supprimer</a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="btn btn-outline-secondary" href="{{ path('villes_edit', {'id': ville.id}) }}" role="button">Modifier</a>
+                                    <a class="btn btn-outline-secondary" href="{{ path('villes_delete', {'id': ville.id}) }}" role="button" onclick="return confirm('Es-tu sûr de vouloir supprimer cette ville ?');">Supprimer</a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
