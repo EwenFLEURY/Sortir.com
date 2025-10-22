@@ -57,7 +57,7 @@ final class GroupeController extends AbstractController
         ]);
     }
 
-    #[IsGranted(GroupeVoter::EDIT)]
+    #[IsGranted(GroupeVoter::EDIT, subject: 'groupe')]
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\\d+'], methods: ['GET','POST'])]
     public function edit(Groupe $groupe,
                          Request $request,
@@ -77,7 +77,7 @@ final class GroupeController extends AbstractController
         ]);
     }
 
-    #[IsGranted(GroupeVoter::DELETE)]
+    #[IsGranted(GroupeVoter::DELETE, subject: 'groupe')]
     #[Route('/{id}/delete', name: 'delete', requirements: ['id' => '\\d+'], methods: ['GET','POST'])]
     public function delete(Groupe $groupe,
                          Request $request,

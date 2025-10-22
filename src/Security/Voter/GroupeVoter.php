@@ -9,53 +9,58 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class GroupeVoter extends Voter
 {
-    public const EDIT = 'POST_EDIT';
-    public const VIEW = 'POST_VIEW';
-    public const ADD = 'POST_ADD';
-    public const DELETE = 'POST_DELETE';
+    public const EDIT   = 'GROUP_EDIT';
+    public const VIEW   = 'GROUP_VIEW';
+    public const ADD    = 'GROUP__ADD';
+    public const DELETE = 'GROUP_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::VIEW, self::ADD, self::DELETE])
-            && $subject instanceof \App\Entity\Groupe;
+        if (!in_array($attribute, [self::EDIT, self::VIEW, self::ADD, self::DELETE], true)) {
+            return false;
+        }
+
+        // Globaux : pas besoin de sujet
+        if (in_array($attribute, [self::ADD, self::VIEW], true)) {
+            return $subject === null || $subject instanceof Groupe;
+        }
+
+        // EDIT/DELETE nécessitent un Groupe
+        return $subject instanceof Groupe;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-
-        // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
         }
 
         return match ($attribute) {
-            self::ADD => $this->canAdd($user),
+            self::ADD  => $this->canAdd($user),
             self::VIEW => $this->canView($user),
-            self::EDIT => $this->canEdit($subject,$user),
-            self::DELETE => $this->canDelete($subject,$user),
+            self::EDIT => $subject instanceof Groupe && $this->canEdit($subject, $user),
+            self::DELETE => $subject instanceof Groupe && $this->canDelete($subject, $user),
             default => false,
         };
     }
 
-    private function canAdd(UserInterface $user)
+    private function canAdd(UserInterface $user): bool
     {
         return true;
     }
 
-    private function canView(UserInterface $user)
+    private function canView(UserInterface $user): bool
     {
         return true;
     }
 
-    private function canEdit(Groupe $groupe,UserInterface $user)
+    private function canEdit(Groupe $groupe, UserInterface $user): bool
     {
         return $groupe->getProprietaire() === $user;
     }
 
-    private function canDelete(Groupe $groupe,UserInterface $user)
+    private function canDelete(Groupe $groupe, UserInterface $user): bool
     {
         return $groupe->getProprietaire() === $user;
     }
