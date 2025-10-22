@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="
+    container">
+        <h4>Annuler une sortie</h4>
+        <div>
+            {{ form_start(sortieAnnulerForm) }}
+            {{ form_row(sortieAnnulerForm.nom) }}
+            {{ form_row(sortieAnnulerForm.dateHeureDebut) }}
+            {{ form_row(sortieAnnulerForm.lieu) }}
+            {{ form_row(sortieAnnulerForm.site) }}
+            {{ form_row(sortieAnnulerForm.motifAnnulation) }}
+
+            <div class="row">
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary btn-sm">Enregistrer</button>
+                </div>
+                <div class="col">
+                    <a href="{{ path('sorties_list') }}" class="btn btn-primary btn-sm">Annuler</a>
+                </div>
+            </div>
+
+            {{ form_end(sortieAnnulerForm) }}
+        </div>
+    </div>
+{% endblock %}

@@ -6,6 +6,7 @@ use App\Entity\Enum\Etat;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\User;
+use App\Form\SortieAnnulationType;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
 use App\Repository\SiteRepository;
@@ -134,17 +135,25 @@ final class SortieController extends AbstractController
     }
 
     #[IsGranted(SortieVoter::CANCEL, 'sortie')]
-    #[Route('/{id}/cancel', name: 'cancel', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    #[Route('/{id}/cancel', name: 'cancel', requirements: ['id' => '\\d+'], methods: ['GET','POST'])]
     public function cancel(
         Sortie $sortie,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        Request $request,
     ): Response
     {
-        $sortie->setEtat(Etat::Annulee);
-        $entityManager->persist($sortie);
-        $entityManager->flush();
-        $this->addFlash('succes',"La sortie est annulée");
-        return $this->redirectToRoute('sorties_list');
+        $sortieAnnulerForm =$this->createForm(SortieAnnulationType::class,$sortie);
+        $sortieAnnulerForm->handleRequest($request);
+        if($sortieAnnulerForm->isSubmitted() && $sortieAnnulerForm->isValid()){
+            $sortie->setEtat(Etat::Annulee);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $this->addFlash('succes', 'Annulation de la sortie');
+            return $this->redirectToRoute('sorties_list');
+        }
+        return $this->render('sortie/cancel.html.twig', [
+            'sortieAnnulerForm' => $sortieAnnulerForm->createView(),
+        ]);
     }
 
     #[IsGranted(SortieVoter::VIEW)]
