@@ -1,5 +1,3 @@
-
-
 function initSitesFilters() {
     const nomInput = document.getElementById('nom-filter');
     const sitesList = document.getElementById('sites-list');
@@ -36,13 +34,7 @@ function initSitesFilters() {
                 row.style.display = 'none';
             }
         });
-
-        if (noResults) {
-            noResults.style.display = visibleCount === 0 ? '' : 'none';
-        }
     }
-
-
 
     nomInput.addEventListener('input', applyFilter);
     applyFilter();

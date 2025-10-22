@@ -47,8 +47,9 @@
             <a class="btn btn-outline-secondary mt-3" href="{{ path('sites_create') }}" role="button">Ajouter</a>
         </div>
     </div>
-    {% block javascripts %}
-        {{ parent() }}
-        <script src="{{ asset('js/sites.js') }}" defer></script>
-    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/sites.js') }}" defer></script>
 {% endblock %}

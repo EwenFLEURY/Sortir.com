@@ -2,12 +2,6 @@
 
 {% block title %}Administration{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-
-    <script src="{{ asset('js/users/import_csv.js') }}" defer></script>
-{% endblock %}
-
 {% block stylesheets %}
     {{ parent() }}
 
@@ -36,7 +30,13 @@
         <div class="alert alert-info">Aucun utilisateur trouvé.</div>
     {% else %}
         <div class="container">
-            <div class="table-container-max table-responsive">
+            <div class="row mt-2">
+                <div class="col">
+                    <label for="filtre-users" class="mr-2">Filtrer par prénom / nom / nom d'utilisateur ou email :</label>
+                    <input type="text" id="filtre-users" class="form-control" placeholder="Entrer votre rechercher.." >
+                </div>
+            </div>
+            <div class="table-container-max table-responsive mt-3">
                 <table class="table table-striped table-bordered">
                     <thead class="table-dark">
                     <tr>
@@ -49,9 +49,9 @@
                         <th class="text-end">Actions</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="users-list">
                     {% for user in users %}
-                        <tr>
+                        <tr data-id="{{ user.id }}" data-prenom="{{ user.prenom }}" data-nom="{{ user.nom }}" data-username="{{ user.username }}" data-email="{{ user.email }}">
                             <th scope="row">{{ loop.index }}</th>
                             <td>{{ user.prenom }}</td>
                             <td>{{ user.nom }}</td>
@@ -96,4 +96,11 @@
             </div>
         </div>
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('js/users/filtreUsers.js') }}" defer></script>
+    <script src="{{ asset('js/users/import_csv.js') }}" defer></script>
 {% endblock %}
