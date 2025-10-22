@@ -87,14 +87,14 @@ final class UserType extends AbstractType
                 'choice_label' => 'nom',
             ])
             ->add('image', FileType::class, [
-                'label' => 'Ma photo',
+                'label' => 'Photo',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File(
-                        maxSize: '10m',
-                        extensions: ['png', 'jpg', 'jpeg'],
-                        extensionsMessage: 'Veuillez envoyer une image valide (soit PNG ou JPEG).',
+                        maxSize: '1m',
+                        extensions: ['png', 'jpg', 'jpeg', 'gif'],
+                        extensionsMessage: 'Veuillez envoyer une image valide (PNG ou JPEG ou GIF).',
                     ),
                 ]
             ])

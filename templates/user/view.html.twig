@@ -17,34 +17,45 @@
         {% endif %}
     </h1>
 
-    <div class="row g-3">
-        <div class="input-group">
-            <label for="prenom" class="col-2">Prénom :</label>
-            <input id="prenom" class="form-control" type="text" value="{{ user.prenom }}" disabled>
+    <div class="row">
+        <div class="col-4">
+            {% if imagePath %}
+                <img src="{{ imagePath }}" alt="Image de profil de {{ user.username }}" width="80%">
+            {% else %}
+                <img src="{{ asset('img/default_user_profile_picture.png') }}" alt="Image de profil par défaut" width="80%">
+            {% endif %}
         </div>
-        <div class="input-group">
-            <label for="nom" class="col-2">Nom :</label>
-            <input id="nom" class="form-control" type="text" value="{{ user.nom }}" disabled>
-        </div>
-        <div class="input-group">
-            <label for="telephone" class="col-2">Téléphone :</label>
-            <input id="telephone" class="form-control" type="text" value="{{ user.telephone }}" disabled>
-        </div>
-        <div class="input-group">
-            <label for="email" class="col-2">Email :</label>
-            <input id="email" class="form-control" type="text" value="{{ user.email }}" disabled>
-        </div>
-        <div class="input-group">
-            <label for="site" class="col-2">Site de rattachement :</label>
-            <input id="site" class="form-control" type="text" value="{{ user.site }}" disabled>
+        <div class="col-8">
+            <div class="row g-3">
+                <div class="input-group">
+                    <label for="prenom" class="col-2">Prénom :</label>
+                    <input id="prenom" class="form-control" type="text" value="{{ user.prenom }}" disabled>
+                </div>
+                <div class="input-group">
+                    <label for="nom" class="col-2">Nom :</label>
+                    <input id="nom" class="form-control" type="text" value="{{ user.nom }}" disabled>
+                </div>
+                <div class="input-group">
+                    <label for="telephone" class="col-2">Téléphone :</label>
+                    <input id="telephone" class="form-control" type="text" value="{{ user.telephone }}" disabled>
+                </div>
+                <div class="input-group">
+                    <label for="email" class="col-2">Email :</label>
+                    <input id="email" class="form-control" type="text" value="{{ user.email }}" disabled>
+                </div>
+                <div class="input-group">
+                    <label for="site" class="col-2">Site de rattachement :</label>
+                    <input id="site" class="form-control" type="text" value="{{ user.site }}" disabled>
+                </div>
+            </div>
+
+            <br>
+
+            <button class="goback btn btn-secondary">Retour</button>
+
+            {% if is_granted('USER_EDIT', user) %}
+                <a class="btn btn-primary" href="{{ path('users_edit', {'id': user.id}) }}">Modifier</a>
+            {% endif %}
         </div>
     </div>
-
-    <br>
-
-    <button class="goback btn btn-secondary">Retour</button>
-
-    {% if is_granted('USER_EDIT', user) %}
-        <a class="btn btn-primary" href="{{ path('users_edit', {'id': user.id}) }}">Modifier</a>
-    {% endif %}
 {% endblock %}

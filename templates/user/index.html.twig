@@ -8,7 +8,7 @@
 
 {% block body %}
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Administration des utilisateurs</h1>
+        <h1 class="h3 mb-0">Administration des utilisateurs {{ '(%s utilisateurs) '|format(users|length)}}</h1>
         <a href="{{ path('users_create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle me-1"></i> Nouvel utilisateur
         </a>
@@ -33,6 +33,8 @@
                     <th scope="col">#</th>
                     <th scope="col">Prénom</th>
                     <th scope="col">Nom</th>
+                    <th scope="col">Nom d'utilisateur</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Actif</th>
                     <th scope="col" class="text-end">Actions</th>
                 </tr>
@@ -43,42 +45,31 @@
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ user.prenom }}</td>
                         <td>{{ user.nom }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
                         <td>{{ user.actif ? 'Actif' : 'Désactiver' }}</td>
                         <td class="text-end">
-                            <div class="" role="group" aria-label="Actions">
+                            <div aria-label="Actions">
                                 <a href="{{ path('users_view', { id: user.id }) }}" class="btn btn-sm btn-outline-warning">
                                     <i class="bi bi-eye"></i> Voir
                                 </a>
                                 {% if app.user != user %}
                                     {% if user.actif %}
-                                        <form
-                                                action="{{ path('users_disable', { id: user.id }) }}"
-                                                method="post"
-                                                class="d-inline"
-                                        >
+                                        <form action="{{ path('users_disable', { id: user.id }) }}" method="post" class="d-inline">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
                                             <button type="submit" class="btn btn-sm btn-outline-secondary">
                                                 <i class="bi bi-x-circle"></i> Désactiver
                                             </button>
                                         </form>
                                     {% else %}
-                                        <form
-                                                action="{{ path('users_enable', { id: user.id }) }}"
-                                                method="post"
-                                                class="d-inline"
-                                        >
+                                        <form action="{{ path('users_enable', { id: user.id }) }}" method="post" class="d-inline">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
                                             <button type="submit" class="btn btn-sm btn-outline-success">
                                                 <i class="bi bi-check-lg"></i> Activer
                                             </button>
                                         </form>
                                     {% endif %}
-                                    <form
-                                            action="{{ path('users_delete', { id: user.id }) }}"
-                                            method="post"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Voulez-vous supprimer {{ user.prenom }} {{ user.nom }}?');"
-                                    >
+                                    <form action="{{ path('users_delete', { id: user.id }) }}" method="post" class="d-inline" onsubmit="return confirm('Voulez-vous supprimer {{ user.username }} ?');">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-sm btn-outline-danger">

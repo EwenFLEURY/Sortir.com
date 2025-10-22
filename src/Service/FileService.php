@@ -30,6 +30,16 @@ final class FileService
     }
 
     /**
+     * Vérifie si le fichier existe
+     * @param string $filePath
+     * @return bool
+     */
+    public function isFileExists(string $filePath): bool
+    {
+        return file_exists($filePath);
+    }
+
+    /**
      * Créer un nom unique et aléatoire
      * @param UploadedFile $file
      * @param string $defaultExtension
@@ -51,14 +61,14 @@ final class FileService
      * Déplace un fichier dans un répertoire et renvoi le chemin
      * @param UploadedFile $file
      * @param string $dirPath
-     * @param string $filePath
+     * @param string $fileName
      * @return string Le chemin du fichier nouvellement déplacer
      */
-    public function moveFileToDirectory(UploadedFile $file, string $dirPath, string $filePath): string
+    public function moveFileToDirectory(UploadedFile $file, string $dirPath, string $fileName): string
     {
-        $moved = $file->move($dirPath, $filePath);
+        $moved = $file->move($dirPath, $fileName);
 
-        return $moved->getRealPath() ?: $dirPath . '/' . $filePath;
+        return $moved->getRealPath() ?: $dirPath . '/' . $fileName;
     }
 
     /**

@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,8 +31,8 @@ final class UserController extends AbstractController
 
     public function __construct(
         private readonly UserRepository $userRepository,
-        private readonly FileService $fileService,
-        ParameterBagInterface $params,
+        private readonly FileService    $fileService,
+        ParameterBagInterface           $params,
     ) {
         $this->importCsvDirectory = $params->get('import_csv_users_directory');
         $this->usersProfilePicturesDirectory = $params->get('users_profile_pictures_directory');
@@ -52,9 +53,33 @@ final class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('plainPassword')->getData();
+            /** @var UploadedFile $image */
+            $image = $form->get('image')->getData();
 
             if ($plainPassword) {
                 $userToCreate->setPassword($passwordHasher->hashPassword($userToCreate, $plainPassword));
+            }
+
+            $userToCreate->setRoles(['ROLE_USER']);
+
+            if ($image) {
+                $imageDirectory = $this->usersProfilePicturesDirectory;
+                $allowedMimetypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if ($this->fileService->isFileMimeType($image, $allowedMimetypes)) {
+                    $nomImage = $this->fileService->createSafeName($image, 'jpg');
+                    if ($this->fileService->createDirectory($imageDirectory)) {
+                        try {
+                            $this->fileService->moveFileToDirectory($image, $imageDirectory, $nomImage);
+                            $userToCreate->setImage($nomImage);
+                        } catch (FileException) {
+                           $this->addFlash('warning', 'Impossible de d\'éplacer l\'image de l\'utilisateur dans le répertoire de dépôt.');
+                        }
+                    } else {
+                        $this->addFlash('warning', 'Impossible de créer le répertoire de dépôt pour l\'image de l\'utilisateur.');
+                    }
+                } else {
+                    $this->addFlash('warning', 'Impossible d\'ajouter l\'image car n\'a pas un format valide (JPG ou PNG ou GIF).');
+                }
             }
 
             $em->persist($userToCreate);
@@ -62,7 +87,7 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', 'L\'utilisateur à bien été créer');
 
-            return $this->redirect($request->headers->get('referer'));
+            return $this->redirectToRoute('users_index');
         }
 
         return $this->render('user/create.html.twig', [
@@ -156,8 +181,16 @@ final class UserController extends AbstractController
     #[IsGranted(UserVoter::READ)]
     #[Route('/{id}', name: 'view', methods: ['GET', 'POST'])]
     public function view(User $userToModify): Response {
+
+        $imagePath = null;
+
+        if ($userToModify->getImage() && $this->fileService->isFileExists($this->usersProfilePicturesDirectory . '/' . $userToModify->getImage())) {
+            $imagePath = '/' . $this->usersProfilePicturesDirectory . '/' . $userToModify->getImage();
+        }
+
         return $this->render('user/view.html.twig', [
             'user' => $userToModify,
+            'imagePath' => $imagePath,
         ]);
     }
 
@@ -175,9 +208,35 @@ final class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('plainPassword')->getData();
+            /** @var UploadedFile $image */
+            $image = $form->get('image')->getData();
 
             if ($plainPassword) {
                 $userToModify->setPassword($passwordHasher->hashPassword($userToModify, $plainPassword));
+            }
+
+            if ($image) {
+                $imageDirectory = $this->usersProfilePicturesDirectory;
+                $allowedMimetypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if ($this->fileService->isFileMimeType($image, $allowedMimetypes)) {
+                    $nomImage = $this->fileService->createSafeName($image, 'jpg');
+                    if ($this->fileService->createDirectory($imageDirectory)) {
+                        try {
+                            $this->fileService->moveFileToDirectory($image, $imageDirectory, $nomImage);
+                            // Si on avait déjà une image alors on la supprime
+                            if ($userToModify->getImage() && !$this->fileService->supprimerFichier($imageDirectory . '/' . $userToModify->getImage())) {
+                                $this->addFlash('warning', 'Impossible de supprimer l\'ancienne image de l\'utilisateur.');
+                            }
+                            $userToModify->setImage($nomImage);
+                        } catch (FileException) {
+                            $this->addFlash('warning', 'Impossible de d\'éplacer l\'image de l\'utilisateur dans le répertoire de dépôt.');
+                        }
+                    } else {
+                        $this->addFlash('warning', 'Impossible de créer le répertoire de dépôt pour l\'image de l\'utilisateur.');
+                    }
+                } else {
+                    $this->addFlash('warning', 'Impossible d\'ajouter l\'image car n\'a pas un format valide (JPG ou PNG ou GIF).');
+                }
             }
 
             $em->flush();
@@ -187,9 +246,16 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('users_view', ['id' => $userToModify->getId()]);
         }
 
+        $imagePath = null;
+
+        if ($userToModify->getImage() && $this->fileService->isFileExists($this->usersProfilePicturesDirectory . '/' . $userToModify->getImage())) {
+            $imagePath = '/' . $this->usersProfilePicturesDirectory . '/' . $userToModify->getImage();
+        }
+
         return $this->render('user/edit.html.twig', [
             'form' => $form,
             'user' => $userToModify,
+            'imagePath' => $imagePath,
         ]);
     }
 
@@ -240,18 +306,24 @@ final class UserController extends AbstractController
     #[IsGranted(UserVoter::DELETE)]
     #[Route('/{id}/delete', name: 'delete', methods: ['POST', 'DELETE'])]
     public function delete(
-        User $userToModify,
+        User $user,
         Request $request,
         EntityManagerInterface $em,
     ) : Response {
         $token = $request->request->get('_token');
 
-        if (!$this->isCsrfTokenValid('delete' . $userToModify->getId(), $token)) {
+        if (!$this->isCsrfTokenValid('delete' . $user->getId(), $token)) {
             $this->addFlash('warning', 'Token CSRF invalide.');
             return $this->redirect($request->headers->get('referer'));
         }
 
-        $em->remove($userToModify);
+        // Suppresion de son image s'il en a une
+        if ($user->getImage() && !$this->fileService->supprimerFichier($this->usersProfilePicturesDirectory . '/' . $user->getImage()))
+        {
+            $this->addFlash('warning', 'Imposssible de supprimer l\'image de l\'utilisateur.');
+        }
+
+        $em->remove($user);
         $em->flush();
 
         $this->addFlash('success', 'Utilisateur supprimé.');

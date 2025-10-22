@@ -18,19 +18,31 @@
     </h1>
 
     {{ form_start(form) }}
-    <div class="row g-3">
-        <div class="col-md-6">{{ form_row(form.username) }}</div>
-        <div class="col-md-6">{{ form_row(form.prenom) }}</div>
-        <div class="col-md-6">{{ form_row(form.nom) }}</div>
-        <div class="col-md-6">{{ form_row(form.telephone) }}</div>
-        <div class="col-md-6">{{ form_row(form.email) }}</div>
-        <div class="col-md-6">{{ form_row(form.site) }}</div>
-        <div class="col-md-6">{{ form_row(form.plainPassword) }}</div>
+    <div class="row">
+        <div class="col-4">
+            {% if imagePath %}
+                <img src="{{ imagePath }}" alt="Image de profil de {{ user.username }}" width="80%">
+            {% else %}
+                <img src="{{ asset('img/default_user_profile_picture.png') }}" alt="Image de profil par défaut" width="80%">
+            {% endif %}
+        </div>
+        <div class="col-8">
+            <div class="row g-3">
+                <div class="col-md-6">{{ form_row(form.username) }}</div>
+                <div class="col-md-6">{{ form_row(form.prenom) }}</div>
+                <div class="col-md-6">{{ form_row(form.nom) }}</div>
+                <div class="col-md-6">{{ form_row(form.telephone) }}</div>
+                <div class="col-md-6">{{ form_row(form.email) }}</div>
+                <div class="col-md-6">{{ form_row(form.site) }}</div>
+                <div class="col-md-6">{{ form_row(form.plainPassword) }}</div>
+                <div class="col-md-6">{{ form_row(form.image) }}</div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+
+            <a class="goback btn btn-secondary" href="">Annuler</a>
+        </div>
     </div>
-
-    <button class="btn btn-primary" type="submit">Enregistrer</button>
-
-    <a class="goback btn btn-secondary" href="">Annuler</a>
 
     {{ form_end(form) }}
 {% endblock %}
