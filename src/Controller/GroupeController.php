@@ -7,6 +7,8 @@ use App\Entity\Ville;
 use App\Form\GroupeType;
 use App\Repository\GroupeRepository;
 use App\Repository\UserRepository;
+use App\Security\Voter\GroupeVoter;
+use App\Security\Voter\SortieVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +25,7 @@ final class GroupeController extends AbstractController
     ) {
 
     }
-
+    #[IsGranted(GroupeVoter::VIEW)]
     #[Route('/list', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request, EntityManagerInterface $manager): Response
     {
@@ -34,6 +36,7 @@ final class GroupeController extends AbstractController
         ]);
     }
 
+    #[IsGranted(GroupeVoter::ADD)]
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
     public function add( EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -54,7 +57,7 @@ final class GroupeController extends AbstractController
         ]);
     }
 
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(GroupeVoter::EDIT)]
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\\d+'], methods: ['GET','POST'])]
     public function edit(Groupe $groupe,
                          Request $request,
@@ -74,7 +77,7 @@ final class GroupeController extends AbstractController
         ]);
     }
 
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted(GroupeVoter::DELETE)]
     #[Route('/{id}/delete', name: 'delete', requirements: ['id' => '\\d+'], methods: ['GET','POST'])]
     public function delete(Groupe $groupe,
                          Request $request,
