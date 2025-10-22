@@ -10,8 +10,10 @@ use App\Form\LieuType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
 use App\Security\Voter\LieuVoter;
+use App\Security\Voter\SortieVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -35,6 +37,7 @@ final class LieuController extends AbstractController
             'lieux' => $lieux,
         ]);
     }
+
     #[IsGranted(LieuVoter::CREATE)]
     #[Route('/create', name: 'create', methods: ['GET','POST'])]
     public function create(VilleRepository $villeRepository, Request $request, EntityManagerInterface $entityManager): Response
@@ -56,6 +59,7 @@ final class LieuController extends AbstractController
 
         return $this->render('lieu/create.html.twig', ['lieuForm' => $lieuForm, 'villes' => $villes]);
     }
+
     #[IsGranted(LieuVoter::EDIT)]
     #[Route('/{id}/edit', name: 'edit', methods: ['GET','POST'])]
     public function edit(VilleRepository $villeRepository, Lieu $lieu, EntityManagerInterface $entityManager, Request $request): Response
@@ -81,5 +85,18 @@ final class LieuController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Lieu supprimé');
         return $this->redirectToRoute('lieux_list');
+    }
+
+    #[IsGranted(SortieVoter::CREATE)]
+    #[Route('/lieu-info/{id}', name: 'lieu_info', methods: ['GET'])]
+    public function lieuInfo(Lieu $lieu): JsonResponse
+    {
+        return new JsonResponse([
+            'villeNom' => $lieu->getVille()?->getNom(),
+            'lieuRue' => $lieu->getRue(),
+            'lieuCodep' => $lieu->getVille()->getCodePostal(),
+            'villeLatitude' => $lieu->getLatitude(),
+            'villeLongitude' => $lieu->getLongitude(),
+        ]);
     }
 }

@@ -28,7 +28,7 @@ final class SortieController extends AbstractController
         private readonly SiteRepository $siteRepository,
     ) {}
 
-    #[IsGranted(SortieVoter::VIEW)]
+    #[IsGranted(SortieVoter::VIEW_LIST)]
     #[Route('/', name: 'list', methods: ['GET','POST'])]
     public function list(): Response
     {
@@ -72,18 +72,6 @@ final class SortieController extends AbstractController
         }
 
         return $this->render('sortie/create.html.twig', ['sortieForm' => $sortieForm, 'lieux' => $lieux]);
-    }
-
-    #[Route('/lieu-info/{id}', name: 'lieu_info', methods: ['GET'])]
-    public function lieuInfo(Lieu $lieu): JsonResponse
-    {
-        return new JsonResponse([
-            'villeNom' => $lieu->getVille()?->getNom(),
-            'lieuRue' => $lieu->getRue(),
-            'lieuCodep' => $lieu->getVille()->getCodePostal(),
-            'villeLatitude' => $lieu->getLatitude(),
-            'villeLongitude' => $lieu->getLongitude(),
-        ]);
     }
 
     #[IsGranted(SortieVoter::SUBSCRIBE)]

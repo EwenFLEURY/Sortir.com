@@ -45,6 +45,10 @@
                             <a class="btn btn-outline-light btn-sm px-3" href="{{ path('app_login') }}">Se connecter</a>
                         </li>
                     {% endif %}
+
+                    <li>
+                        <button class="nav-link text-light hover-underline" onclick="switchTheme();actualiserSwitchTheme();"><i class="bi bi-moon" id="theme-switcher"></i></button>
+                    </li>
                 </ul>
             </div>
         </div>

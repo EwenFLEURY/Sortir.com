@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             longitudeSpan.textContent = '---';
             return;
         }
-        fetch('/sorties/lieu-info/' + lieuId)
+        fetch('/lieu/lieu-info/' + lieuId)
             .then(response => response.json())
             .then(data => {
                 villeSpan.textContent = data.villeNom || '---';

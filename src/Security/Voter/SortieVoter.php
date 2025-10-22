@@ -11,6 +11,7 @@ final class SortieVoter extends Voter
 {
     public const CREATE = 'sortie_CREATE';
     public const VIEW = 'sortie_VIEW';
+    public const VIEW_LIST = 'sortie_VIEW_LIST';
     public const EDIT = 'sortie_EDIT';
     public const CANCEL = 'sortie_CANCEL';
     public const SUBSCRIBE = 'sortie_Subscribe';
@@ -20,7 +21,7 @@ final class SortieVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::CANCEL, self::SUBSCRIBE, self::DELETE,])
+       return in_array($attribute, [self::CREATE, self::VIEW, self::VIEW_LIST, self::EDIT, self::CANCEL, self::SUBSCRIBE, self::DELETE])
             && ($subject === null || $subject instanceof \App\Entity\Sortie);
     }
 
@@ -36,6 +37,7 @@ final class SortieVoter extends Voter
         return match ($attribute) {
             self::CREATE => $this->canCreate($user),
             self::VIEW => $this->canView($user),
+            self::VIEW_LIST => $this->canViewList($user),
             self::EDIT => $this->canEdit($subject, $user),
             self::CANCEL => $this->canCancel($subject, $user),
             self::SUBSCRIBE => $this->canSubscribe($user),
@@ -50,6 +52,11 @@ final class SortieVoter extends Voter
     }
 
     private function canView(UserInterface $user): bool
+    {
+        return true;
+    }
+
+    private function canViewList( UserInterface $user): bool
     {
         return true;
     }

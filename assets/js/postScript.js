@@ -8,3 +8,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Actualiser le switch des thèmes
+actualiserSwitchTheme();
