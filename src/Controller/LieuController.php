@@ -31,10 +31,8 @@ final class LieuController extends AbstractController
     {
         $lieux = $this->lieuRepository->findAll();
 
-
-        return $this->render('lieu/lieux.html.twig', [
+        return $this->render('lieu/list.html.twig', [
             'lieux' => $lieux,
-
         ]);
     }
     #[IsGranted(LieuVoter::CREATE)]
