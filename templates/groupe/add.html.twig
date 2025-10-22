@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="
+    container">
+        <h4>Ajouter un groupe</h4>
+        <div>
+            {{ form_start(groupeForm) }}
+            {{ form_row(groupeForm.nom) }}
+            {{ form_row(groupeForm.proprietaire) }}
+            {{ form_row(groupeForm.members) }}
+
+            <button type="submit" class="btn btn-success btn-sm">Ajouter</button>
+            {{ form_end(groupeForm) }}
+        </div>
+    </div>
+{% endblock %}

@@ -74,11 +74,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    /**
+     * @var Collection<int, Groupe>
+     */
+    #[ORM\ManyToMany(targetEntity: Groupe::class, mappedBy: 'members')]
+    private Collection $groupes;
+
+    /**
+     * @var Collection<int, Groupe>
+     */
+    #[ORM\OneToMany(targetEntity: Groupe::class, mappedBy: 'proprietaire', orphanRemoval: true)]
+    private Collection $groupesProprietaire;
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
         $this->sorties = new ArrayCollection();
         $this->actif = true;
+        $this->groupes = new ArrayCollection();
+        $this->groupesProprietaire = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -292,6 +306,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Groupe>
+     */
+    public function getGroupes(): Collection
+    {
+        return $this->groupes;
+    }
+
+    public function addGroupe(Groupe $groupe): static
+    {
+        if (!$this->groupes->contains($groupe)) {
+            $this->groupes->add($groupe);
+            $groupe->addMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupe(Groupe $groupe): static
+    {
+        if ($this->groupes->removeElement($groupe)) {
+            $groupe->removeMember($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Groupe>
+     */
+    public function getGroupesProprietaire(): Collection
+    {
+        return $this->groupesProprietaire;
+    }
+
+    public function addGroupesProprietaire(Groupe $groupesProprietaire): static
+    {
+        if (!$this->groupesProprietaire->contains($groupesProprietaire)) {
+            $this->groupesProprietaire->add($groupesProprietaire);
+            $groupesProprietaire->setProprietaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupesProprietaire(Groupe $groupesProprietaire): static
+    {
+        if ($this->groupesProprietaire->removeElement($groupesProprietaire)) {
+            // set the owning side to null (unless already changed)
+            if ($groupesProprietaire->getProprietaire() === $this) {
+                $groupesProprietaire->setProprietaire(null);
+            }
+        }
 
         return $this;
     }

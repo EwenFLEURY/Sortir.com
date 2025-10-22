@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MainController!{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/tableau.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        <div class="row mt-2">
+            <div class="col">
+                <label for="nom-filter" class="mr-2">Filtrer par nom :</label>
+                <input type="text" id="nom-filter" class="form-control" placeholder="Tapez un nom de groupe..." style="max-width: 340px;">
+            </div>
+        </div>
+        {% if groupes %}
+            <div class="table-container table-responsive mt-3">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Nom</th>
+                        <th>Propiétaire</th>
+                        <th>Membre</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="groupes-list">
+                    {% for groupe in groupes %}
+
+                        <tr data-nom="{{ groupe.nom }}" data-groupe-id="{{ groupe.id }}">
+                            <td>{{ groupe.nom }}</td>
+                            <td>{{ groupe.proprietaire.nom }}</td>
+                            <td>
+                                <ol class="list-group ">
+                                    {% for membre in groupe.members %}
+                                        <li class="list-group-item">{{ membre.nom }}</li>
+                                    {% endfor %}
+                                </ol>
+                            </td>
+                            {% if app.user.nom == groupe.proprietaire.nom %}
+
+                            <td>
+                                <a class="btn btn-outline-secondary" href="{{ path('groupes_edit', {'id': groupe.id}) }}" role="button">Modifier</a>
+                                    <a class="btn btn-outline-secondary" href="{{ path('groupes_delete', {'id': groupe.id}) }}" role="button" onclick="return confirm('Es-tu sûr de vouloir supprimer ce groupe ?');">Supprimer</a>
+                            </td>
+                            {% endif %}
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Pas de villes</p>
+        {% endif %}
+
+        <a class="btn btn-outline-secondary mt-3 mb-2" href="{{ path('groupes_add') }}" role="button">Ajouter</a>
+
+    </div>
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/groupes.js') }}" defer></script>
+    {% endblock %}
+{% endblock %}
