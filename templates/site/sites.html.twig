@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/tableau.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h3 class="text-center mt-4"><strong>Gérer les sites</strong></h3>
+        <div class="container mt-3 w-75">
+            <div class="row mt-2">
+                <div class="col">
+                    <label for="nom-filter" class="mr-2">Filtrer par nom :</label>
+                    <input type="text" id="nom-filter" class="form-control" placeholder="Tapez un nom de sortie..." style="max-width: 340px;">
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3 w-75">
+            {% if sites %}
+                <div class="table-container table-responsive mt-3">
+                    <table class="table table-striped table-bordered ">
+                        <thead class="table-dark">
+                        <tr>
+                            <th class="w-25">Ville</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="sites-list">
+                        {% for site in sites %}
+                            <tr data-nom="{{ site.nom }}" data-site-id="{{ site.id }}">
+                                <td>{{ site.nom }}</td>
+                                <td>
+                                    <a class="btn btn-outline-secondary" href="{{ path('sites_edit', {'id': site.id}) }}" role="button">Modifier</a>
+                                    <a class="btn btn-outline-secondary" href="{{ path('sites_delete', {'id': site.id}) }}" role="button" onclick="return confirm('Es-tu sûr de vouloir supprimer ce site ?');">Supprimer</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Pas de sites</p>
+            {% endif %}
+        </div>
+        <div class="container mt-3 w-75">
+            <a class="btn btn-outline-secondary mt-3" href="{{ path('sites_create') }}" role="button">Ajouter</a>
+        </div>
+    </div>
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/sites.js') }}" defer></script>
+    {% endblock %}
+{% endblock %}

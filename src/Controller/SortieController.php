@@ -133,7 +133,7 @@ final class SortieController extends AbstractController
         return $this->redirectToRoute('sorties_list');
     }
 
-    #[IsGranted(SortieVoter::CANCEL)]
+    #[IsGranted(SortieVoter::CANCEL, 'sortie')]
     #[Route('/{id}/cancel', name: 'cancel', requirements: ['id' => '\\d+'], methods: ['GET'])]
     public function cancel(
         Sortie $sortie,
