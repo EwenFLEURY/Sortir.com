@@ -25,13 +25,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/users', name: 'users_')]
 final class UserController extends AbstractController
 {
-    private string $importCsvDirectory;
+    private readonly string $importCsvDirectory;
+    private readonly string $usersProfilePicturesDirectory;
 
     public function __construct(
         private readonly UserRepository $userRepository,
         ParameterBagInterface $params,
     ) {
         $this->importCsvDirectory = $params->get('import_csv_users_directory');
+        $this->usersProfilePicturesDirectory = $params->get('users_profile_pictures_directory');
     }
 
     #[IsGranted(UserVoter::CREATE)]
