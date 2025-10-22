@@ -21,6 +21,7 @@
             <a href="{{ path('users_create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-1"></i> Nouvel utilisateur
             </a>
+            <a  class="btn btn-success" href="{{ asset('modelUser.csv') }}"><i class="bi bi-filetype-csv"></i> Télécharger le model CSV</a>
             <button id="csv-trigger" class="btn btn-secondary" data-upload-url="{{ path('users_import') }}" data-csrf="{{ csrf_token('import_csv_users') }}">
                 Importer un CSV
             </button>
