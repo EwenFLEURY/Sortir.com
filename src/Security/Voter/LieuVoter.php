@@ -41,12 +41,12 @@ final class LieuVoter extends Voter
 
     private function canCreate( UserInterface $user): bool
     {
-        return true;
+        return in_array('ROLE_ADMIN', $user->getRoles());
     }
 
     private function canView(UserInterface $user): bool
     {
-        return true;
+        return in_array('ROLE_ADMIN', $user->getRoles());
     }
 
     private function canEdit(UserInterface $user): bool
