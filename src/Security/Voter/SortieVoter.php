@@ -14,13 +14,11 @@ final class SortieVoter extends Voter
     public const VIEW_LIST = 'sortie_VIEW_LIST';
     public const EDIT = 'sortie_EDIT';
     public const CANCEL = 'sortie_CANCEL';
-    public const SUBSCRIBE = 'sortie_Subscribe';
+    public const SUBSCRIBE = 'sortie_SUBSCRIBE';
     public const DELETE = 'sortie_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
        return in_array($attribute, [self::CREATE, self::VIEW, self::VIEW_LIST, self::EDIT, self::CANCEL, self::SUBSCRIBE, self::DELETE])
             && ($subject === null || $subject instanceof \App\Entity\Sortie);
     }
@@ -67,7 +65,7 @@ final class SortieVoter extends Voter
     }
 
     private function canCancel(Sortie $sortie, UserInterface $user): bool{
-        return $user === $sortie->getOrganisateur();
+        return in_array('ROLE_ADMIN', $user->getRoles()) || $user === $sortie->getOrganisateur();
     }
 
     private function canSubscribe(UserInterface $user): bool

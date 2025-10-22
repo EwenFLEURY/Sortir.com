@@ -17,22 +17,14 @@ final class VilleVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if (!in_array($attribute, [self::EDIT, self::VIEW, self::ADD, self::DELETE], true)) {
-            return false;
-        }
-
-        // Globaux : pas besoin de sujet
-        if (in_array($attribute, [self::ADD, self::VIEW], true)) {
-            return $subject === null || $subject instanceof Groupe;
-        }
-
-        // EDIT/DELETE nécessitent un Groupe
-        return $subject instanceof Groupe;
+        return in_array($attribute, [self::EDIT, self::VIEW, self::ADD, self::DELETE])
+            && ($subject === null || $subject instanceof \App\Entity\User);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
+
         if (!$user instanceof UserInterface) {
             return false;
         }

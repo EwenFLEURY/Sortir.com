@@ -87,7 +87,7 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', 'L\'utilisateur à bien été créer');
 
-            return $this->redirectToRoute('users_index');
+            return $this->redirect($request->headers->get('referer'));
         }
 
         return $this->render('user/create.html.twig', [
@@ -101,6 +101,7 @@ final class UserController extends AbstractController
         Request $request,
         ImportCsvService $importCsvService,
     ): JsonResponse {
+        // Format email;password;username;name;firstname;phone;site
         if (!$this->isCsrfTokenValid('import_csv_users',  $request->request->get('_token'))) {
             return $this->json([
                 'success' => false,
@@ -243,7 +244,7 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', 'Profil mis à jour');
 
-            return $this->redirectToRoute('users_view', ['id' => $userToModify->getId()]);
+            return $this->redirect($request->headers->get('referer'));
         }
 
         $imagePath = null;

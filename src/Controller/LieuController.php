@@ -2,20 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Enum\Etat;
 use App\Entity\Lieu;
-use App\Entity\Sortie;
-use App\Entity\User;
 use App\Form\LieuType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
 use App\Security\Voter\LieuVoter;
 use App\Security\Voter\SortieVoter;
+use App\Service\UrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -25,6 +24,7 @@ final class LieuController extends AbstractController
 
     public function __construct(
         private readonly LieuRepository $lieuRepository,
+        private readonly UrlService $urlService,
     ) {}
 
     #[IsGranted(LieuVoter::VIEW)]
@@ -40,21 +40,27 @@ final class LieuController extends AbstractController
 
     #[IsGranted(LieuVoter::CREATE)]
     #[Route('/create', name: 'create', methods: ['GET','POST'])]
-    public function create(VilleRepository $villeRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function create(
+        VilleRepository $villeRepository,
+        Request $request,
+        Session $session,
+        EntityManagerInterface $entityManager
+    ): Response
     {
+        $this->urlService->setFormReturnTo($request, $session);
+
         $villes = $villeRepository->findAll();
         $lieu = new Lieu();
         $lieuForm = $this->createForm(LieuType::class, $lieu);
         $lieuForm->handleRequest($request);
 
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
-
             $entityManager->persist($lieu);
             $entityManager->flush();
 
             $this->addFlash('success', 'Lieu Ajouter.');
 
-            return $this->redirectToRoute('lieux_list');
+            return $this->redirect($this->urlService->getFormReturnTo($session) ?? $this->generateUrl('lieux_list'));
         }
 
         return $this->render('lieu/create.html.twig', ['lieuForm' => $lieuForm, 'villes' => $villes]);
@@ -62,29 +68,48 @@ final class LieuController extends AbstractController
 
     #[IsGranted(LieuVoter::EDIT)]
     #[Route('/{id}/edit', name: 'edit', methods: ['GET','POST'])]
-    public function edit(VilleRepository $villeRepository, Lieu $lieu, EntityManagerInterface $entityManager, Request $request): Response
+    public function edit(
+        VilleRepository $villeRepository,
+        Lieu $lieu,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        Session $session,
+    ): Response
     {
+        $this->urlService->setFormReturnTo($request, $session);
 
         $villes = $villeRepository->findAll();
+
         $lieuForm = $this->createForm(LieuType::class, $lieu);
+
         $lieuForm->handleRequest($request);
+
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
             $entityManager->persist($lieu);
             $entityManager->flush();
+
             $this->addFlash('success','Lieu modifié.');
-            return $this->redirectToRoute('lieux_list');
+
+            return $this->redirect($this->urlService->getFormReturnTo($session) ?? $this->generateUrl('lieux_list'));
         }
+
         return $this->render('lieu/edit.html.twig', ['lieuForm' => $lieuForm, 'villes' => $villes, 'lieu' => $lieu]);
     }
 
     #[IsGranted(LieuVoter::DELETE)]
     #[Route('/{id}/delete', name: 'delete', methods: ['GET'])]
-    public function delete(Lieu $lieu, EntityManagerInterface $em): Response
+    public function delete(
+        Lieu $lieu,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response
     {
         $em->remove($lieu);
         $em->flush();
+
         $this->addFlash('success', 'Lieu supprimé');
-        return $this->redirectToRoute('lieux_list');
+
+        return $this->redirect($this->urlService->getReferer($request) ?? $this->generateUrl('lieux_list'));
     }
 
     #[IsGranted(SortieVoter::CREATE)]

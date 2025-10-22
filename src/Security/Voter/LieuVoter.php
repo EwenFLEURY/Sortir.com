@@ -15,8 +15,6 @@ final class LieuVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
         return in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::DELETE,])
             && ($subject === null || $subject instanceof \App\Entity\Lieu);
     }

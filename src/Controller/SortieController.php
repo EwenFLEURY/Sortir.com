@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Enum\Etat;
-use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\SortieAnnulationType;
@@ -12,12 +11,13 @@ use App\Repository\LieuRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Security\Voter\SortieVoter;
+use App\Service\UrlService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -27,6 +27,7 @@ final class SortieController extends AbstractController
     public function __construct(
         private readonly SortieRepository $sortieRepository,
         private readonly SiteRepository $siteRepository,
+        private readonly UrlService $urlService,
     ) {}
 
     #[IsGranted(SortieVoter::VIEW_LIST)]
@@ -44,8 +45,15 @@ final class SortieController extends AbstractController
 
     #[IsGranted(SortieVoter::CREATE)]
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function sortieCreate(LieuRepository $lieuRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function sortieCreate(
+        LieuRepository $lieuRepository,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Session $session,
+    ): Response
     {
+        $this->urlService->setFormReturnTo($request, $session);
+
         $lieux = $lieuRepository->findAll();
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
@@ -69,7 +77,7 @@ final class SortieController extends AbstractController
 
             $this->addFlash('success', 'Sortie Ajouter.');
 
-            return $this->redirectToRoute('sorties_list');
+            return $this->redirect($this->urlService->getFormReturnTo($session) ?? $this->generateUrl('sorties_list'));
         }
 
         return $this->render('sortie/create.html.twig', ['sortieForm' => $sortieForm, 'lieux' => $lieux]);
@@ -77,8 +85,15 @@ final class SortieController extends AbstractController
 
     #[IsGranted(SortieVoter::SUBSCRIBE)]
     #[Route('/{id}/subscribe', name: 'subscribe', requirements: ['id' => '\\d+'], methods: ['GET'])]
-    public function subscribe(Sortie $sortie, EntityManagerInterface $entityManager): Response
+    public function subscribe(
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        Session $session,
+    ): Response
     {
+        $this->urlService->setFormReturnTo($request, $session);
+
         $participants = $sortie->getParticipants()->toArray();
         $userParticipant = false;
 
@@ -93,12 +108,13 @@ final class SortieController extends AbstractController
 
         if ($sortie->getEtat() == Etat::Ouverte && !$userParticipant && $sortie->getNbInscriptionMax() >= count($participants) + 1 && $sortie->getDateLimiteInscription()->getTimestamp() > (new DateTimeImmutable())->getTimestamp()) {
             $sortie->addParticipant($user);
+
             $entityManager->persist($sortie);
             $entityManager->flush();
 
             $this->addFlash('success','Inscription réussite.');
 
-            return $this->redirectToRoute('sorties_list');
+            return $this->redirect($this->urlService->getFormReturnTo($session) ?? $this->generateUrl('sorties_list'));
         }
 
         $this->addFlash('danger','Erreur lors de l\'inscription');
@@ -108,8 +124,15 @@ final class SortieController extends AbstractController
 
     #[IsGranted(SortieVoter::SUBSCRIBE)]
     #[Route('/{id}/unsubscribe', name: 'unsubscribe', requirements: ['id' => '\\d+'], methods: ['GET'])]
-    public function unsubscribe(Sortie $sortie, EntityManagerInterface $entityManager): Response
+    public function unsubscribe(
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        Session $session,
+    ): Response
     {
+        $this->urlService->setFormReturnTo($request, $session);
+
         $participants = $sortie->getParticipants()->toArray();
         $userParticipant = false;
 
@@ -124,13 +147,17 @@ final class SortieController extends AbstractController
 
         if ($sortie->getEtat() == Etat::Ouverte && $userParticipant) {
             $sortie->removeParticipant($user);
+
             $entityManager->persist($sortie);
             $entityManager->flush();
+
             $this->addFlash('success','Désinscription réussite.');
-            return $this->redirectToRoute('sorties_list');
+
+            return $this->redirect($this->urlService->getFormReturnTo($session) ?? $this->generateUrl('sorties_list'));
         }
 
         $this->addFlash('danger','Erreur lors de la d\'ésinscription');
+
         return $this->redirectToRoute('sorties_list');
     }
 
@@ -140,17 +167,25 @@ final class SortieController extends AbstractController
         Sortie $sortie,
         EntityManagerInterface $entityManager,
         Request $request,
+        Session $session,
     ): Response
     {
+        $this->urlService->setFormReturnTo($request, $session);
+
         $sortieAnnulerForm =$this->createForm(SortieAnnulationType::class,$sortie);
         $sortieAnnulerForm->handleRequest($request);
+
         if($sortieAnnulerForm->isSubmitted() && $sortieAnnulerForm->isValid()){
             $sortie->setEtat(Etat::Annulee);
+
             $entityManager->persist($sortie);
             $entityManager->flush();
-            $this->addFlash('succes', 'Annulation de la sortie');
-            return $this->redirectToRoute('sorties_list');
+
+            $this->addFlash('success', 'Annulation de la sortie');
+
+            return $this->redirect($this->urlService->getFormReturnTo($session) ?? $this->generateUrl('sorties_list'));
         }
+
         return $this->render('sortie/cancel.html.twig', [
             'sortieAnnulerForm' => $sortieAnnulerForm->createView(),
         ]);
@@ -165,8 +200,16 @@ final class SortieController extends AbstractController
 
     #[IsGranted(SortieVoter::EDIT,'sortie')]
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(LieuRepository $lieuRepository, Sortie $sortie, EntityManagerInterface $entityManager, Request $request): Response
+    public function edit(
+        LieuRepository $lieuRepository,
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        Session $session
+    ): Response
     {
+        $this->urlService->setFormReturnTo($request, $session);
+
         $lieux = $lieuRepository->findAll();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
@@ -174,19 +217,28 @@ final class SortieController extends AbstractController
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $entityManager->persist($sortie);
             $entityManager->flush();
+
             $this->addFlash('success','Sortie modifié.');
-            return $this->redirectToRoute('sorties_list');
+
+            return $this->redirect($this->urlService->getFormReturnTo($session) ?? $this->generateUrl('sorties_list'));
         }
+
         return $this->render('sortie/edit.html.twig', ['sortieForm' => $sortieForm, 'lieux' => $lieux, 'sortie' => $sortie]);
     }
 
     #[IsGranted(SortieVoter::DELETE,'sortie')]
     #[Route('/{id}/delete', name: 'delete', methods: ['GET'])]
-    public function delete(Sortie $sortie, EntityManagerInterface $em): Response
+    public function delete(
+        Sortie $sortie,
+        EntityManagerInterface $em,
+        Request $request
+    ): Response
     {
         $em->remove($sortie);
         $em->flush();
+
         $this->addFlash('success', 'Sortie supprimé');
-        return $this->redirectToRoute('sorties_list');
+
+        return $this->redirect($this->urlService->getReferer($request) ?? $this->generateUrl('sorties_list'));
     }
 }

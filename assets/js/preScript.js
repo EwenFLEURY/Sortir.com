@@ -41,7 +41,6 @@ function enregistrerThemeDansStorage(nouveauTheme) {
  * @param {string} nouveauTheme
  */
 function changerTheme(nouveauTheme) {
-    console.log('nouveauTheme :', nouveauTheme);
     document.documentElement.setAttribute("data-bs-theme", nouveauTheme);
     enregistrerThemeDansStorage(nouveauTheme);
 }
