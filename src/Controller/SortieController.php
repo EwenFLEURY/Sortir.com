@@ -37,8 +37,6 @@ final class SortieController extends AbstractController
         $sorties = $this->sortieRepository->findAll();
         $sites = $this->siteRepository->findAll();
 
-        // sortie.dateHeureDebut|date_modify('+' ~ sortie.duree ~ ' minutes')
-        //fin > date('-1 month')
         $sorties = array_filter($sorties, function (Sortie $sortie) {
             $sortieDateDebut = DateTime::createFromImmutable($sortie->getDateHeureDebut());
             $duree = $sortie->getDuree();
@@ -46,7 +44,7 @@ final class SortieController extends AbstractController
             $now = new DateTimeImmutable();
             return
                 ($dateFin > $now->modify('- 1 month'))
-                && ($sortie->getEtat() != Etat::Creee || $sortie->getOrganisateur() === $this->getUser());
+                && ($sortie->getEtat() != Etat::Cloturee && ($sortie->getEtat() != Etat::Creee || $sortie->getOrganisateur() === $this->getUser()));
         });
 
         return $this->render('sortie/sorties.html.twig', [

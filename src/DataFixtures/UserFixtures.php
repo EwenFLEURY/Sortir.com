@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Site;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -11,49 +12,43 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const USER_REF_PREFIX = 'user_';
-
-    public function __construct(private UserPasswordHasherInterface $hasher) {}
+    public function __construct(
+        private readonly UserPasswordHasherInterface $hasher
+    ) {}
 
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
 
+        $sites = $manager->getRepository(Site::class)->findAll();
+
         // Admin de démo
         $admin = new User();
-        if (method_exists($admin, 'setEmail'))    $admin->setEmail('admin@example.test');
-        if (method_exists($admin, 'setUsername')) $admin->setUsername('admin');
-        if (method_exists($admin, 'setRoles'))    $admin->setRoles(['ROLE_ADMIN']);
-        if (method_exists($admin, 'setNom'))      $admin->setNom('Admin');
-        if (method_exists($admin, 'setPrenom'))   $admin->setPrenom('Demo');
-        if (method_exists($admin, 'setTelephone'))$admin->setTelephone('0600000000');
-        if (method_exists($admin, 'setActif'))    $admin->setActif(true);
-        if (method_exists($admin, 'setSite'))     $admin->setSite($this->getReference(SiteFixtures::SITE_REF_PREFIX.'0', \App\Entity\Site::class));
-        if (method_exists($admin, 'setPassword')) $admin->setPassword($this->hasher->hashPassword($admin, 'password'));
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setNom('Admin');
+        $admin->setPrenom('Demo');
+        $admin->setUsername('admin');
+        $admin->setEmail('admin@example.test');
+        $admin->setTelephone('06 00 00 00 00');
+        $admin->setSite($sites[0]);
+        $admin->setPassword($this->hasher->hashPassword($admin, 'password'));
+
         $manager->persist($admin);
-        $this->addReference(self::USER_REF_PREFIX.'admin', $admin);
 
         // Utilisateurs
         for ($i = 0; $i < 25; $i++) {
             $user = new User();
-            if (method_exists($user, 'setEmail'))     $user->setEmail($faker->unique()->safeEmail());
-            if (method_exists($user, 'setUsername'))  $user->setUsername($faker->unique()->userName());
-            if (method_exists($user, 'setRoles'))     $user->setRoles(['ROLE_USER']);
-            if (method_exists($user, 'setNom'))       $user->setNom($faker->lastName());
-            if (method_exists($user, 'setPrenom'))    $user->setPrenom($faker->firstName());
-            if (method_exists($user, 'setTelephone')) $user->setTelephone($faker->phoneNumber());
-            if (method_exists($user, 'setActif'))     $user->setActif($faker->boolean(90));
-            if (method_exists($user, 'setSite')) {
-                $user->setSite($this->getReference(
-                    SiteFixtures::SITE_REF_PREFIX.$faker->numberBetween(0, 5),
-                    \App\Entity\Site::class
-                ));            }
-            if (method_exists($user, 'setPassword')) {
-                $user->setPassword($this->hasher->hashPassword($user, 'password'));
-            }
+            $user->setRoles(['ROLE_USER']);
+            $user->setNom($faker->unique()->firstName);
+            $user->setPrenom($faker->unique()->lastName);
+            $user->setUsername($this->generateUsername($user));
+            $user->setEmail(sprintf("%s.%s@exmaple.test", $user->getPrenom(), $user->getNom()));
+            $user->setTelephone($faker->phoneNumber);
+            $user->setActif($faker->boolean(90));
+            $user->setSite($faker->randomElement($sites));
+            $user->setPassword($this->hasher->hashPassword($user, 'password'));
 
             $manager->persist($user);
-            $this->addReference(self::USER_REF_PREFIX.$i, $user);
         }
 
         $manager->flush();
@@ -61,6 +56,25 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
     public function getDependencies(): array
     {
-        return [SiteFixtures::class];
+        return [
+            SiteFixtures::class
+        ];
+    }
+
+    /**
+     * Helper qui permet de créer un username en fonction du nom/prénom
+     * @param User $user
+     * @return string
+     */
+    private function generateUsername(User $user): string
+    {
+        $choix = rand(0, 2);
+        if ($choix === 0) {
+            return sprintf("%s%s", $user->getPrenom()[0], $user->getNom());
+        } else if($choix === 1) {
+            return sprintf("%s.%s", $user->getPrenom(), $user->getNom());
+        } else {
+          return sprintf("%s%d", $user->getPrenom(), rand(10, 99));
+        }
     }
 }

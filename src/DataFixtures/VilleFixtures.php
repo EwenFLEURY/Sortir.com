@@ -9,8 +9,6 @@ use Faker\Factory;
 
 class VilleFixtures extends Fixture
 {
-    public const VILLE_REF_PREFIX = 'ville_';
-
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
@@ -18,14 +16,9 @@ class VilleFixtures extends Fixture
         for ($i = 0; $i < 12; $i++) {
             $ville = new Ville();
             $ville->setNom($faker->city);
-
-            $codePostal = str_pad((string) $faker->numberBetween(1000, 32000), 5, '0', STR_PAD_LEFT);
-            if (method_exists($ville, 'setCodePostal')) {
-                $ville->setCodePostal($codePostal);
-            }
+            $ville->setCodePostal(str_pad((string) $faker->numberBetween(1000, 32000), 5, '0', STR_PAD_LEFT));
 
             $manager->persist($ville);
-            $this->addReference(self::VILLE_REF_PREFIX.$i, $ville);
         }
 
         $manager->flush();

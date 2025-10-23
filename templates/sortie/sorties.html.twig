@@ -89,7 +89,9 @@
                             <th>Cloture inscription </th>
                             <th>Inscrits/places</th>
                             <th>Etat</th>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <th>Inscrit</th>
+                            {% endif %}
                             <th>Organisateur</th>
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <th>Actions</th>
@@ -116,11 +118,13 @@
                                         <br> Motif :{{ sortie.motifAnnulation }}
                                         {% endif %}
                                     </td>
-                                        <td>
-                                            {% if app.user in sortie.participants %}
-                                                <i class="bi bi-check-circle-fill text-success text-center"></i>
-                                            {% endif %}
-                                        </td>
+                                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                    <td>
+                                        {% if app.user in sortie.participants %}
+                                            <i class="bi bi-check-circle-fill text-success text-center"></i>
+                                        {% endif %}
+                                    </td>
+                                    {% endif %}
                                     <td>{{ sortie.organisateur.nom }}</td>
                                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                         <td>
