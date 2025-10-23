@@ -31,7 +31,7 @@ class LieuType extends AbstractType
             ])
             ->add('longitude', NumberType::class, [
                 'label' => 'Longitude du lieu :',
-                'invalid_message' => 'La latitude est invalide',
+                'invalid_message' => 'La longitude est invalide',
                 'required' => true,
             ])
             ->add('ville', EntityType::class, [

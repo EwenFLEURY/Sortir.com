@@ -36,11 +36,13 @@ class SortieType extends AbstractType
             ])
             ->add('nbInscriptionMax', NumberType::class, [
                 'label' => 'Nombre de places :',
+                'invalid_message' => 'Le nombre de places n\'est pas valide',
                 'required' => true,
                 'html5' => true,
             ])
             ->add('duree', NumberType::class, [
                 'label' => 'Durée :',
+                'invalid_message' => 'La durée n\'est pas valide',
                 'required' => true,
                 'html5' => true,
             ])
