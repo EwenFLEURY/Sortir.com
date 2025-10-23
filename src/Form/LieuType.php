@@ -6,6 +6,7 @@ use App\Entity\Lieu;
 use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,12 +24,15 @@ class LieuType extends AbstractType
                 'label' => 'Nom de la Rue :',
                 'required' => true,
             ])
-            ->add('latitude', TextType::class, [
+            ->add('latitude', NumberType::class, [
                 'label' => 'Latitude du lieu :',
+                'invalid_message' => 'La latitude est invalide',
                 'required' => true,
             ])
-            ->add('longitude', TextType::class, [
+            ->add('longitude', NumberType::class, [
                 'label' => 'Longitude du lieu :',
+                'invalid_message' => 'La latitude est invalide',
+                'required' => true,
             ])
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
