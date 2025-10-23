@@ -11,7 +11,6 @@ final class SortieVoter extends Voter
 {
     public const CREATE = 'sortie_CREATE';
     public const VIEW = 'sortie_VIEW';
-    public const VIEW_LIST = 'sortie_VIEW_LIST';
     public const EDIT = 'sortie_EDIT';
     public const CANCEL = 'sortie_CANCEL';
     public const SUBSCRIBE = 'sortie_SUBSCRIBE';
@@ -19,7 +18,7 @@ final class SortieVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-       return in_array($attribute, [self::CREATE, self::VIEW, self::VIEW_LIST, self::EDIT, self::CANCEL, self::SUBSCRIBE, self::DELETE])
+       return in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::CANCEL, self::SUBSCRIBE, self::DELETE])
             && ($subject === null || $subject instanceof \App\Entity\Sortie);
     }
 
@@ -35,7 +34,6 @@ final class SortieVoter extends Voter
         return match ($attribute) {
             self::CREATE => $this->canCreate($user),
             self::VIEW => $this->canView($user),
-            self::VIEW_LIST => $this->canViewList($user),
             self::EDIT => $this->canEdit($subject, $user),
             self::CANCEL => $this->canCancel($subject, $user),
             self::SUBSCRIBE => $this->canSubscribe($user),
@@ -44,7 +42,7 @@ final class SortieVoter extends Voter
         };
     }
 
-    private function canCreate( UserInterface $user): bool
+    private function canCreate(UserInterface $user): bool
     {
         return true;
     }
@@ -54,14 +52,9 @@ final class SortieVoter extends Voter
         return true;
     }
 
-    private function canViewList( UserInterface $user): bool
-    {
-        return true;
-    }
-
     private function canEdit(Sortie $sortie, UserInterface $user): bool
     {
-        return in_array('ROLE_ADMIN', $user->getRoles()) || $user === $sortie->getOrganisateur();
+        return $user === $sortie->getOrganisateur();
     }
 
     private function canCancel(Sortie $sortie, UserInterface $user): bool{
@@ -75,6 +68,6 @@ final class SortieVoter extends Voter
 
     private function canDelete(Sortie $sortie, UserInterface $user): bool
     {
-        return in_array('ROLE_ADMIN', $user->getRoles()) || $user === $sortie->getOrganisateur();
+        return $user === $sortie->getOrganisateur();
     }
 }

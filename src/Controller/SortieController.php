@@ -12,6 +12,7 @@ use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Security\Voter\SortieVoter;
 use App\Service\UrlService;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,12 +31,23 @@ final class SortieController extends AbstractController
         private readonly UrlService $urlService,
     ) {}
 
-    #[IsGranted(SortieVoter::VIEW_LIST)]
     #[Route('/', name: 'list', methods: ['GET','POST'])]
     public function list(): Response
     {
         $sorties = $this->sortieRepository->findAll();
         $sites = $this->siteRepository->findAll();
+
+        // sortie.dateHeureDebut|date_modify('+' ~ sortie.duree ~ ' minutes')
+        //fin > date('-1 month')
+        $sorties = array_filter($sorties, function (Sortie $sortie) {
+            $sortieDateDebut = DateTime::createFromImmutable($sortie->getDateHeureDebut());
+            $duree = $sortie->getDuree();
+            $dateFin = $sortieDateDebut->modify("+$duree minutes");
+            $now = new DateTimeImmutable();
+            return
+                ($dateFin > $now->modify('- 1 month'))
+                && ($sortie->getEtat() != Etat::Creee || $sortie->getOrganisateur() === $this->getUser());
+        });
 
         return $this->render('sortie/sorties.html.twig', [
             'sorties' => $sorties,
@@ -234,7 +246,7 @@ final class SortieController extends AbstractController
         Request $request
     ): Response
     {
-        $em->remove($sortie);
+        $sortie->setEtat(Etat::Cloturee);
         $em->flush();
 
         $this->addFlash('success', 'Sortie supprimé');

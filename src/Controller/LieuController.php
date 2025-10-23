@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -114,6 +115,7 @@ final class LieuController extends AbstractController
 
     #[IsGranted(SortieVoter::CREATE)]
     #[Route('/lieu-info/{id}', name: 'lieu_info', methods: ['GET'])]
+    #[Cache(maxage: 600, smaxage: 600, public: true)]
     public function lieuInfo(Lieu $lieu): JsonResponse
     {
         return new JsonResponse([
