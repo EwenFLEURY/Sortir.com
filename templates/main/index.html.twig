@@ -6,62 +6,33 @@
     <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
 {% endblock %}
 {% block body %}
-    <section class="hero-landing text-center text-white py-5 position-relative overflow-hidden">
-        <div class="hero-overlay"></div>
-        <div class="container position-relative">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-10">
-                    <h1 class="display-4 fw-bold mb-3">Sorties Entreprises</h1>
-                    <p class="lead mb-4">
-                        Créez des moments inoubliables pour renforcer la cohésion de vos équipes.
-                    </p>
-                    <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a href="{{ path('sorties_list') }}" class="btn btn-primary btn-lg px-4 shadow-sm" aria-label="Commencer maintenant">
-                            Commencer maintenant
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-    <section id="features" class="py-5 bg-light">
+    <section class="bg-secondary text-center py-5">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card feature-card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
-                            <h5 class="card-title fw-semibold">Planification facile</h5>
-                            <p class="card-text mb-0">
-                                Organisez des sorties personnalisées en quelques clics&nbsp;: team building, séminaires, activités sportives…
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card feature-card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
-                            <h5 class="card-title fw-semibold">Options variées</h5>
-                            <p class="card-text mb-0">
-                                Choisissez parmi des activités nature, ateliers créatifs, événements culturels et bien plus encore.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card feature-card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
-                            <h5 class="card-title fw-semibold">Gestion intégrale</h5>
-                            <p class="card-text mb-0">
-                                Gérez inscriptions, listes d’attente, annulations et communication en un seul endroit.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <h1 class="display-4 fw-bold text-white">Bienvenue sur Sortir.com</h1>
+            <p class="lead mt-3 text-white">
+                La plateforme officielle pour organiser et participer aux sorties de l’école ENI.
+            </p>
+            <a href="{{ path('sorties_list') }}" class="btn btn-dark btn-lg mt-3">Commencer maintenant</a>
         </div>
     </section>
+
+    <section class="py-5 ">
+        <div class="container">
+            <h2 class="text-center mb-5 fw-bold text-secondary">Pourquoi utiliser Sortir.com ?</h2>
+            <div class="row g-4">
+                <div class="col-md-6 text-center text-sencodary">
+                    <i class="bi bi-calendar-check display-4 text-secondary mb-3"></i>
+                    <h5>Organisation simple</h5>
+                    <p>Créez vos sorties en quelques clics : définissez un lieu, une date et invitez vos camarades.</p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <i class="bi bi-people display-4 text-secondary mb-3"></i>
+                    <h5>Participation facile</h5>
+                    <p>Inscrivez-vous rapidement aux événements proposés et suivez les participants en temps réel.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
 {% endblock %}
