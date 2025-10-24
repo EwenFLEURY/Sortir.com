@@ -24,7 +24,7 @@ use Throwable;
 
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[Route('/users', name: 'users_')]
-final class UserController extends AbstractController
+class UserController extends AbstractController
 {
     private readonly string $importCsvDirectory;
     private readonly string $usersProfilePicturesDirectory;

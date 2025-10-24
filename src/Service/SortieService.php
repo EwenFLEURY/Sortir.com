@@ -5,11 +5,10 @@ namespace App\Service;
 use App\Entity\Sortie;
 use App\Entity\Enum\Etat;
 use App\Repository\SortieRepository;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class SortieService
+class SortieService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
@@ -18,19 +17,19 @@ final class SortieService
 
     public function updateEtat(Sortie $sortie, DateTimeImmutable $now): bool
     {
-        $duree = $sortie->getDuree();
-        $dateDebut = DateTime::createFromImmutable($sortie->getDateHeureDebut());
-        $dateFin = $dateDebut->modify("+ $duree minutes");
-
         // Si la sortie est cloturée, annulée ou vient juste d'être créer alors on ne fait rien
         if (in_array($sortie->getEtat(), [Etat::Cloturee, Etat::Annulee, Etat::Creee])) {
             return false;
         }
 
+        $duree = $sortie->getDuree();
+        $dateDebut = $sortie->getDateHeureDebut();
+        $dateFin = $dateDebut->modify("+ $duree minutes");
+
         // Sinon on met à jour les données
         if ($dateFin <= $now) {
             $sortie->setEtat(Etat::Passee);
-        } else if ($dateDebut < $now) {
+        } elseif ($dateDebut < $now) {
             $sortie->setEtat(Etat::Ouverte);
         } else {
             $sortie->setEtat(Etat::Activite);

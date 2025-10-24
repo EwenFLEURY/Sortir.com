@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 
 #[Route('/site', name: 'sites_')]
-final class SiteController extends AbstractController
+class SiteController extends AbstractController
 {
 
     public function __construct(

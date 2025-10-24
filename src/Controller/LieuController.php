@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/lieu', name: 'lieux_')]
-final class LieuController extends AbstractController
+class LieuController extends AbstractController
 {
 
     public function __construct(

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Throwable;
 
-final class FileService
+class FileService
 {
     /**
      * Créer un dossier si il n'existe pas

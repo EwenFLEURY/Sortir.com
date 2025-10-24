@@ -5,7 +5,7 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-final class UrlService
+class UrlService
 {
     /**
      * Renvoi le referer pour revenir à la page précédente

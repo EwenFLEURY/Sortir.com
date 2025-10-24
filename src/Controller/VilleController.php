@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/villes', name: 'villes_')]
-final class VilleController extends AbstractController
+class VilleController extends AbstractController
 {
     public function __construct(
         private readonly VilleRepository $villeRepository,

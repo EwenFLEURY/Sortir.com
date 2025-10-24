@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/groupes', name: 'groupes_')]
-final class GroupeController extends AbstractController
+class GroupeController extends AbstractController
 {
     public function __construct(
         private readonly UserRepository $userRepository,

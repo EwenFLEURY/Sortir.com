@@ -1,0 +1,7 @@
+# config/packages/test/doctrine.yaml
+doctrine:
+  dbal:
+    url: '%env(resolve:DATABASE_URL)%'
+    # Ne mets pas de server_version spécifique MySQL ici
+  orm:
+    auto_generate_proxy_classes: true

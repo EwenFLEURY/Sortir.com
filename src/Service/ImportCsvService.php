@@ -8,11 +8,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\UnavailableStream;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-final class ImportCsvService
+class ImportCsvService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
