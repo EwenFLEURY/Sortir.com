@@ -67,6 +67,7 @@ final class UserType extends AbstractType
                             'max' => 4096,
                         ]),
                         new PasswordStrength(
+                            minScore: PasswordStrength::STRENGTH_MEDIUM,
                             message: 'Le niveau de sécurité du mot de passe est trop faible. Veuillez utiliser un mot de passe plus fort.'
                         ),
                         new NotCompromisedPassword(
