@@ -9,8 +9,12 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: null
+        storage_factory_id: session.storage.factory.native
+        cookie_lifetime: 0         
+        gc_maxlifetime: 1800
         cookie_secure: auto
         cookie_samesite: lax
+
 
     #esi: true
     #fragments: true
