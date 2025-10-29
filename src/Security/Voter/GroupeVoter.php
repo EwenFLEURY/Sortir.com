@@ -11,7 +11,7 @@ final class GroupeVoter extends Voter
 {
     public const EDIT   = 'GROUP_EDIT';
     public const VIEW   = 'GROUP_VIEW';
-    public const ADD    = 'GROUP__ADD';
+    public const ADD    = 'GROUP_ADD';
     public const DELETE = 'GROUP_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
