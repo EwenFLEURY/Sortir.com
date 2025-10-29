@@ -115,7 +115,7 @@
                                     <td>{{ sortie.participants|length }}/ {{ sortie.nbInscriptionMax }}</td>
                                     <td>{{ sortie.etat.value }}
                                         {% if sortie.etat.value ==  "Annulée" and sortie.motifAnnulation %}
-                                        <br> Motif :{{ sortie.motifAnnulation }}
+                                        <br> Motif : {{ sortie.motifAnnulation }}
                                         {% endif %}
                                     </td>
                                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}

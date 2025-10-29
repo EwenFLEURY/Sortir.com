@@ -67,6 +67,15 @@ class LieuController extends AbstractController
         return $this->render('lieu/create.html.twig', ['lieuForm' => $lieuForm, 'villes' => $villes]);
     }
 
+    #[IsGranted(LieuVoter::VIEW)]
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    public function show(Lieu $lieu): Response
+    {
+        return $this->render('lieu/show.html.twig', [
+            'lieu' => $lieu,
+        ]);
+    }
+
     #[IsGranted(LieuVoter::EDIT)]
     #[Route('/{id}/edit', name: 'edit', methods: ['GET','POST'])]
     public function edit(

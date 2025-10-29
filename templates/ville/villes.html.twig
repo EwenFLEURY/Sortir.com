@@ -35,7 +35,7 @@
                             <td>
                                 <ol class="list-group ">
                                     {% for lieu in ville.lieux %}
-                                        <a href="{{ path('lieux_edit', {'id': lieu.id}) }}" class="text-decoration-none text-dark">
+                                        <a href="{{ path('lieux_show', {'id': lieu.id}) }}" class="text-decoration-none text-dark">
                                             <li class="list-group-item">
                                                     {{ lieu.nom }}
                                             </li>

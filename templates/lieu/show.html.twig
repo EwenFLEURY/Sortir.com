@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container mt-4">
+
+        <h1 class="text-center mb-5">Détail d'un lieu</h1>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="mb-3">
+                    <strong>Lieu :</strong> {{ lieu.nom }}
+                </div>
+                <div class="mb-3">
+                    <strong>Rue :</strong> {{ lieu.rue }}
+                </div>
+                <div class="mb-3">
+                    <strong>Ville :</strong> {{ lieu.ville.nom }}
+                </div>
+                <div class="mb-3">
+                    <strong>Code postal :</strong> {{ lieu.ville.codePostal }}
+                </div>
+                <div class="mb-3">
+                    <strong>Latitude :</strong> {{ lieu.latitude }}
+                </div>
+                <div class="mb-3">
+                    <strong>Longitude :</strong> {{ lieu.longitude }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
