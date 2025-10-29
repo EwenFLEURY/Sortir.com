@@ -23,4 +23,10 @@
         max-height: 300px; /* Hauteur réduite sur mobile pour économiser l'espace */
     }
 }
+
+@media (max-width: 960px) {
+    .container:has(.table-container-max) {
+        max-width: 100%;
+    }
+}
      

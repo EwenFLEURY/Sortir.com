@@ -17,8 +17,6 @@ function initUsersFilters() {
             const username = (row.dataset.username || '').toLowerCase();
             const email = (row.dataset.email || '').toLowerCase();
 
-            console.log(filterQuery, nom, nom.includes(filterQuery));
-
             const matches =
                 prenom.includes(filterQuery)
                 || nom.includes(filterQuery)
