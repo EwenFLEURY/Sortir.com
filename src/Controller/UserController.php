@@ -284,7 +284,7 @@ class UserController extends AbstractController
 
     #[IsGranted(UserVoter::DISABLE)]
     #[Route('/{id}/disable', name: 'disable', methods: ['POST'])]
-    public function diable(
+    public function disable(
         User $userToModify,
         Request $request,
         EntityManagerInterface $em,
