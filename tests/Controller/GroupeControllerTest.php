@@ -372,6 +372,11 @@ final class FakeAuthenticatedUser implements UserInterface
         return $this->roles;
     }
 
+    public function addGroupe(Groupe $groupe): void
+    {
+
+    }
+
     public function eraseCredentials(): void
     {
     }
