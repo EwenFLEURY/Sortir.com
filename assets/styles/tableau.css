@@ -25,8 +25,11 @@
 }
 
 @media (max-width: 960px) {
-    .container {
+    .container:has(.table-container-max) {
         max-width: 100%;
     }
+    .container:has(.table-container) {
+        max-width: 90%;
+    }
 }
-     
+
