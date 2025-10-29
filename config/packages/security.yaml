@@ -13,6 +13,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            user_checker: App\Security\UserChecker
+
             custom_authenticators:
               - App\Security\LoginFormAuthenticator
 
