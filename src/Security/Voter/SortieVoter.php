@@ -11,6 +11,7 @@ final class SortieVoter extends Voter
 {
     public const CREATE = 'sortie_CREATE';
     public const VIEW = 'sortie_VIEW';
+    public const LIST = 'sortie_LIST';
     public const EDIT = 'sortie_EDIT';
     public const CANCEL = 'sortie_CANCEL';
     public const SUBSCRIBE = 'sortie_SUBSCRIBE';
@@ -18,7 +19,7 @@ final class SortieVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-       return in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::CANCEL, self::SUBSCRIBE, self::DELETE])
+       return in_array($attribute, [self::CREATE, self::VIEW, self::LIST, self::EDIT, self::CANCEL, self::SUBSCRIBE, self::DELETE])
             && ($subject === null || $subject instanceof \App\Entity\Sortie);
     }
 
@@ -34,6 +35,7 @@ final class SortieVoter extends Voter
         return match ($attribute) {
             self::CREATE => $this->canCreate($user),
             self::VIEW => $this->canView($user),
+            self::LIST => $this->canList($user),
             self::EDIT => $this->canEdit($subject, $user),
             self::CANCEL => $this->canCancel($subject, $user),
             self::SUBSCRIBE => $this->canSubscribe($user),
@@ -49,6 +51,10 @@ final class SortieVoter extends Voter
 
     private function canView(UserInterface $user): bool
     {
+        return true;
+    }
+
+    private function canList(UserInterface $user): bool {
         return true;
     }
 

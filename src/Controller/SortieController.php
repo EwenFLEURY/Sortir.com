@@ -31,6 +31,7 @@ class SortieController extends AbstractController
         private readonly UrlService $urlService,
     ) {}
 
+    #[IsGranted(SortieVoter::LIST)]
     #[Route('/', name: 'list', methods: ['GET','POST'])]
     public function list(): Response
     {
