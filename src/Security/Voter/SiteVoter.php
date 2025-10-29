@@ -8,10 +8,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class SiteVoter extends Voter
 {
-    public const CREATE = 'lieu_CREATE';
-    public const VIEW = 'lieu_VIEW';
-    public const EDIT = 'lieu_EDIT';
-    public const DELETE = 'lieu_DELETE';
+    public const CREATE = 'site_CREATE';
+    public const VIEW = 'site_VIEW';
+    public const EDIT = 'site_EDIT';
+    public const DELETE = 'site_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
