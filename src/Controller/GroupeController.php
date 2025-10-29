@@ -47,10 +47,14 @@ class GroupeController extends AbstractController
 
         $group = new Groupe();
 
-        $groupeForm = $this->createForm(GroupeType::class, $group, ['user' => $this->getUser()]);
+        $user = $this->getUser();
+
+        $groupeForm = $this->createForm(GroupeType::class, $group, ['user' => $user]);
         $groupeForm->handleRequest($request);
 
         if ($groupeForm->isSubmitted() && $groupeForm->isValid()) {
+            $user->addGroupe($group);
+
             $entityManager->persist($group);
             $entityManager->flush();
 
