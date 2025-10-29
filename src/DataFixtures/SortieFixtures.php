@@ -114,7 +114,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < $nbParticipants; $i++) {
             do {
                 $user = $faker->randomElement($users);
-            } while ($user === $sortie->getOrganisateur());
+            } while ($user === $sortie->getOrganisateur() or in_array($user, (array)$sortie->getParticipants()));
             $sortie->addParticipant($user);
         }
     }
