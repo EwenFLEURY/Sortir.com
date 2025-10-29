@@ -100,5 +100,3 @@ function initSortiesFilters() {
 }
 
 document.addEventListener('DOMContentLoaded', initSortiesFilters);
-document.addEventListener('turbo:load', initSortiesFilters);
-window.addEventListener('pageshow', (e) => { if (e.persisted) initSortiesFilters(); });

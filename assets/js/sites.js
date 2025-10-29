@@ -9,7 +9,7 @@ function initSitesFilters() {
     if (
         !nomInput
     ) {
-        console.error('Éléments DOM manquants pour les filtres de sorties.');
+        console.error('Éléments DOM manquants pour les filtres de sites.');
         return;
     }
 

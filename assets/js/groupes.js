@@ -11,7 +11,7 @@ function initGroupesFilters() {
     if (
         !nomInput
     ) {
-        console.error('Éléments DOM manquants pour les filtres de sorties.');
+        console.error('Éléments DOM manquants pour les filtres de groupes.');
         return;
     }
 
