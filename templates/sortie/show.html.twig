@@ -63,7 +63,7 @@
                     <tbody>
                     {% for participant in participants %}
                         <tr>
-                            <td>{{ participant.username }}</td>
+                            <td><a class="text-decoration-none" href="{{ path('users_view', {'id': participant.id}) }}">{{ participant.username }}</td>
                             <td>{{ participant.nom }}</td>
                         </tr>
                     {% else %}

@@ -41,7 +41,7 @@ class SortieType extends AbstractType
                 'html5' => true,
             ])
             ->add('duree', NumberType::class, [
-                'label' => 'Durée :',
+                'label' => 'Durée (minutes) :',
                 'invalid_message' => 'La durée n\'est pas valide',
                 'required' => true,
                 'html5' => true,

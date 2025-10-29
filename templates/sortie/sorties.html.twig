@@ -125,7 +125,7 @@
                                         {% endif %}
                                     </td>
                                     {% endif %}
-                                    <td>{{ sortie.organisateur.nom }}</td>
+                                    <td><a class="text-decoration-none" href="{{ path('users_view', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.nom }}</a></td>
                                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                         <td>
                                             {% if app.user.nom == sortie.organisateur.nom  %}
