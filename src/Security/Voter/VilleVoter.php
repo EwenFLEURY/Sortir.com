@@ -12,7 +12,7 @@ final class VilleVoter extends Voter
 {
     public const EDIT   = 'VILLE_EDIT';
     public const VIEW   = 'VILLE_VIEW';
-    public const ADD    = 'VILLE__ADD';
+    public const ADD    = 'VILLE_ADD';
     public const DELETE = 'VILLE_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
