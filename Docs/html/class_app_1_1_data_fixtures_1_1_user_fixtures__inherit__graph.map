@@ -1,0 +1,7 @@
+<map id="App\DataFixtures\UserFixtures" name="App\DataFixtures\UserFixtures">
+<area shape="rect" id="Node000001" title=" " alt="" coords="6,80,208,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,67,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,41,96,78,93,81,57,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="91,5,266,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="157,45,121,81,117,78,154,41"/>
+</map>

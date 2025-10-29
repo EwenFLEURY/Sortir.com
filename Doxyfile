@@ -1,0 +1,38 @@
+# --- Projet ---
+PROJECT_NAME           = "Sortir.com (Symfony)"
+OUTPUT_DIRECTORY       = docs
+INPUT                  = src
+FILE_PATTERNS          = *.php
+RECURSIVE              = YES
+
+# Exclusions pour éviter le bruit
+EXCLUDE                = vendor \
+                         var \
+                         config \
+                         migrations \
+                         tests/bootstrap.php \
+                         src/Kernel.php \
+                         src/DependencyInjection
+
+# --- Extraction ---
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+JAVADOC_AUTOBRIEF      = YES
+CASE_SENSE_NAMES       = NO
+OPTIMIZE_OUTPUT_FOR_C  = NO
+QUIET                  = YES
+
+# --- Graphs/diagrammes (UML) ---
+HAVE_DOT               = YES
+CLASS_DIAGRAMS         = YES
+DOT_IMAGE_FORMAT       = svg
+DOT_TRANSPARENT        = YES
+DOT_GRAPH_MAX_NODES    = 80
+CALL_GRAPH             = NO
+CALLER_GRAPH           = NO
+
+# --- HTML ---
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = NO

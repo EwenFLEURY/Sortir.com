@@ -1,0 +1,6 @@
+<map id="App\Repository\ParticipantRepository" name="App\Repository\ParticipantRepository">
+<area shape="rect" id="Node000001" title="&lt;Participant&gt;" alt="" coords="5,80,183,123"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="13,5,175,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,48,89,80,83,80,83,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="105,48,105,80,99,80,100,48"/>
+</map>

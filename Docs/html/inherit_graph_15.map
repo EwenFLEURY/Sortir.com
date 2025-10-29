@@ -1,0 +1,25 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="27,5,210,32"/>
+<area shape="rect" id="Node000001" href="$class_app_1_1_repository_1_1_user_repository.html" title="&lt;User&gt;" alt="" coords="287,5,493,32"/>
+<area shape="poly" id="edge31_Node000000_Node000001" title=" " alt="" coords="226,16,286,16,286,21,226,21"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="5,56,232,99"/>
+<area shape="rect" id="Node000007" href="$class_app_1_1_repository_1_1_reset_password_request_repository.html" title="&lt;ResetPasswordRequest&gt;" alt="" coords="286,56,494,99"/>
+<area shape="poly" id="edge32_Node000008_Node000007" title=" " alt="" coords="248,75,285,75,285,80,248,80"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="37,232,200,259"/>
+<area shape="poly" id="edge40_Node000002_Node000001" title=" " alt="" coords="140,218,229,109,250,73,260,57,278,42,301,30,303,35,281,46,265,61,255,75,234,112,144,222"/>
+<area shape="poly" id="edge37_Node000002_Node000007" title=" " alt="" coords="141,219,200,164,238,134,278,108,303,97,306,102,281,113,241,138,203,168,145,223"/>
+<area shape="rect" id="Node000003" href="$class_app_1_1_repository_1_1_etat_repository.html" title="&lt;Etat&gt;" alt="" coords="289,443,491,469"/>
+<area shape="poly" id="edge33_Node000002_Node000003" title=" " alt="" coords="137,270,161,307,194,350,234,393,281,428,305,440,303,445,278,433,231,397,190,353,157,310,133,273"/>
+<area shape="rect" id="Node000004" href="$class_app_1_1_repository_1_1_groupe_repository.html" title="&lt;Groupe&gt;" alt="" coords="280,123,500,149"/>
+<area shape="poly" id="edge34_Node000002_Node000004" title=" " alt="" coords="153,221,211,189,279,159,316,147,318,152,281,164,213,194,156,226"/>
+<area shape="rect" id="Node000005" href="$class_app_1_1_repository_1_1_lieu_repository.html" title="&lt;Lieu&gt;" alt="" coords="289,173,491,200"/>
+<area shape="poly" id="edge35_Node000002_Node000005" title=" " alt="" coords="198,225,324,198,325,203,199,231"/>
+<area shape="rect" id="Node000006" href="$class_app_1_1_repository_1_1_participant_repository.html" title="&lt;Participant&gt;" alt="" coords="301,224,479,267"/>
+<area shape="poly" id="edge36_Node000002_Node000006" title=" " alt="" coords="215,243,301,243,301,248,215,248"/>
+<area shape="rect" id="Node000009" href="$class_app_1_1_repository_1_1_site_repository.html" title="&lt;Site&gt;" alt="" coords="289,291,491,317"/>
+<area shape="poly" id="edge38_Node000002_Node000009" title=" " alt="" coords="199,260,325,287,324,293,198,265"/>
+<area shape="rect" id="Node000010" href="$class_app_1_1_repository_1_1_sortie_repository.html" title="&lt;Sortie&gt;" alt="" coords="284,341,496,368"/>
+<area shape="poly" id="edge39_Node000002_Node000010" title=" " alt="" coords="156,265,213,297,281,327,318,338,316,343,279,332,211,301,153,269"/>
+<area shape="rect" id="Node000011" href="$class_app_1_1_repository_1_1_ville_repository.html" title="&lt;Ville&gt;" alt="" coords="288,392,492,419"/>
+<area shape="poly" id="edge41_Node000002_Node000011" title=" " alt="" coords="144,268,202,324,240,353,281,378,310,389,308,394,278,382,237,358,199,328,140,272"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="App\Form\SortieAnnulationType" name="App\Form\SortieAnnulationType">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,80,211,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="59,5,157,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,48,111,80,105,80,105,48"/>
+</map>
