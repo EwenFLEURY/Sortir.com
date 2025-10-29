@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Site;
-use App\Entity\Ville;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
